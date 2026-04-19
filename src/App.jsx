@@ -6,11 +6,17 @@ import SignUp from './pages/signup/SignUp';
 import Admin from './pages/adminPage/Admin';
 import User from './pages/userPage/User';
 import CarDetails from './pages/carDetails/CarDetails';
+import Nav from './components/navbar/Nav';
+import About from './pages/about/About';
+import Footer from "./components/footer/Footer";
+import Contact from './pages/contact/Contact';
 
 
 const App = () => {
   return (
     <div>
+      <Nav/>
+
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<Login/>}/>
@@ -18,8 +24,12 @@ const App = () => {
         <Route path="/dashboard" element={<Admin/>}/>
         <Route path="/user" element={<User/>}/>
         <Route path="/cardetails" element={<CarDetails/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/contact" element={<Contact/>}/>
         <Route path="*" element={<NotFound/>}/>
       </Routes>
+
+      <Footer/>
     </div>
   )
 }
