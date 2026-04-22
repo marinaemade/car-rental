@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom"
+import {Route, Routes,Link} from "react-router-dom"
 import Home from './pages/home/Home';
 import NotFound from './pages/notFound/NotFound';
 import Login from './pages/login/Login';
@@ -17,9 +17,10 @@ const App = () => {
         <Route path="/register" element={<SignUp/>}/>
         <Route path="/dashboard" element={<Admin/>}/>
         <Route path="/user" element={<User/>}/>
-        <Route path="/cardetails" element={<CarDetails/>}/>
+        <Route path="/car/:id" element={<CarDetails />} />
         <Route path="*" element={<NotFound/>}/>
       </Routes>
+      
     </div>
   )
 }

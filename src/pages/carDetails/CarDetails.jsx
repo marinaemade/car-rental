@@ -1,7 +1,10 @@
-const CarDetails = () => {
+import React from 'react'
+
+function CarDetails() {
   return (
-    <div>CarDetails
-      <h1>cars</h1>
+    <div>
+      <h1>hello cars</h1>
+      
     </div>
   )
 }
