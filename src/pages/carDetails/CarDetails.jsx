@@ -1,6 +1,11 @@
-const CarDetails = () => {
+import React from 'react'
+
+function CarDetails() {
   return (
-    <div>CarDetails</div>
+    <div>
+      <h1>hello cars</h1>
+      
+    </div>
   )
 }
 

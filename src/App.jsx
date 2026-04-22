@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom"
+import {Route, Routes,Link} from "react-router-dom"
 import Home from './pages/home/Home';
 import NotFound from './pages/notFound/NotFound';
 import Login from './pages/login/Login';
@@ -35,8 +35,12 @@ const App = () => {
         //Rahma
         <Route path="/dashboard" element={<Admin/>}/>
 
+       
+         
+
+
         //Merna
-        <Route path="/cardetails/:id" element={<CarDetails />} />
+       <Route path="/car/:id" element={<CarDetails />} />
         <Route path="/cars" element={<Cars/>}/>
 
         //Fatma
@@ -51,6 +55,7 @@ const App = () => {
       </Routes>
 
       <Footer/>
+
     </div>
   )
 }
