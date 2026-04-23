@@ -18,14 +18,17 @@ const Login = () => {
   };
 
   return (
+    <>
+    {/*
     <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-white">
-      {/* --- Navigation Bar --- */}
+    
+    
       <header className="border-b border-gray-100 sticky top-0 bg-white z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
-            {/* Logo */}
+            //logo
             <div className="flex items-center gap-2">
-              {/* Simple Steering Wheel Icon Placeholder */}
+              
               <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ color: BRAND_COLOR }}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
                   <circle cx="12" cy="12" r="10"></circle>
@@ -34,17 +37,7 @@ const Login = () => {
                 </svg>
               </div>
               <span className="text-2xl font-bold tracking-tight">RahalCar</span>
-            </div>
-
-          
-            <nav className="hidden md:flex space-x-6 text-sm font-medium">
-              {['Home', 'Vehicles', 'Dealers', 'Shop', 'Pages', 'News', 'Contact'].map((item) => (
-                <button key={item} className="hover:text-green-500 transition-colors flex items-center gap-1">
-                  {item}
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-              ))}
-            </nav>
+            </div>  
 
             
             <div className="flex items-center gap-3">
@@ -56,18 +49,18 @@ const Login = () => {
                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
               </button>
             </div>
+            
           </div>
         </div>
-      </header>
+      </header> 
+    </div>
+    */}
 
       {/* --- Main Content --- */}
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 bg-white">
           
           <div className="text-center">
-       
-       
-
             <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-4" style={{ backgroundColor: '#16a34a30', color: 'black' }}>
               Sign in
             </div>
@@ -78,8 +71,6 @@ const Login = () => {
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
             
-     
-     
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -99,8 +90,6 @@ const Login = () => {
               </div>
             </div>
 
-           
-           
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -191,7 +180,7 @@ const Login = () => {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 };
 
