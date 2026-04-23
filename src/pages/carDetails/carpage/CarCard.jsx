@@ -6,7 +6,7 @@ export default function CarCard({ car }) {
   return (
     <div className="group bg-gray-900 text-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 cursor-pointer h-full flex flex-col">
       
-      {/* Image Container */}
+
       <div className="relative overflow-hidden bg-gray-800 h-48">
         <img
           src={car.image}
@@ -14,7 +14,7 @@ export default function CarCard({ car }) {
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
         />
         
-        {/* Availability Badge */}
+  
         <div className="absolute top-3 right-3">
           {car.available ? (
             <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
