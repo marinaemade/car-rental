@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { UserIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 // React Icons for Brand icons (Facebook, Apple)
 import { FaFacebookF, FaApple } from 'react-icons/fa';
+// Using it to gro to sign up page if the user doesn't have an account
+import { Link } from 'react-router-dom';
 
 // Define the exact green color from the design
 const BRAND_COLOR = '#64ff4f'; 
@@ -19,42 +21,6 @@ const Login = () => {
 
   return (
     <>
-    {/*
-    <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-white">
-    
-    
-      <header className="border-b border-gray-100 sticky top-0 bg-white z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            //logo
-            <div className="flex items-center gap-2">
-              
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ color: BRAND_COLOR }}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                  <path d="M2 12h20"></path>
-                </svg>
-              </div>
-              <span className="text-2xl font-bold tracking-tight">RahalCar</span>
-            </div>  
-
-            
-            <div className="flex items-center gap-3">
-              <button className="font-medium text-sm hover:text-green-500">Sign in</button>
-              <button className="px-5 py-2.5 text-sm font-semibold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-opacity">
-                Add Listing
-              </button>
-              <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors" style={{ color: BRAND_COLOR }}>
-                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-              </button>
-            </div>
-            
-          </div>
-        </div>
-      </header> 
-    </div>
-    */}
 
       {/* --- Main Content --- */}
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -65,7 +31,7 @@ const Login = () => {
               Sign in
             </div>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
-              Welcome back
+              Welcome Back
             </h2>
           </div>
 
@@ -117,7 +83,7 @@ const Login = () => {
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer"
-                  style={{ accentColor: BRAND_COLOR }}
+                  style={{ accentColor: '#16a34a' }} // ← غيرتي اللون هنا
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
@@ -135,7 +101,7 @@ const Login = () => {
             {/* Submit Button */}
             <div>
               <button type="submit" 
-                className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-green-400 hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+                className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               >
                 <span className="flex items-center gap-2">
                   Sign in
@@ -173,9 +139,12 @@ const Login = () => {
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
               Don't have an account?{' '}
-              <a href="#" className="font-semibold text-black hover:underline">
+              <Link 
+                to="/register"
+                className="font-semibold text-black hover:underline"
+              >
                 Register Here!
-              </a>
+              </Link>
             </p>
           </div>
         </div>
