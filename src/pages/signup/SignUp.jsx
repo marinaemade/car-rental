@@ -3,31 +3,26 @@ import React, { useState } from 'react';
 import { UserIcon, LockClosedIcon, ArrowRightIcon, PhoneIcon } from '@heroicons/react/24/outline';
 // React Icons for Brand icons (Facebook, Apple)
 import { FaFacebookF, FaApple } from 'react-icons/fa';
-// Using it to go to login page if the user already has an account
+// For navigation to login page
 import { Link } from 'react-router-dom';
 
-// Define the exact green color from the design
-const BRAND_COLOR = '#64ff4f'; 
 
 const SignUp = () => {
+  
+  
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Sign up attempt:', { fullName, phoneNumber, email, password, agreeTerms });
-  };
-
   return (
     <>
       {/* --- Main Content --- */}
-      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 bg-white">
           
-          {/* Header */}
+          {/* Header Section */}
           <div className="text-center">
             <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-4" style={{ backgroundColor: '#16a34a30', color: 'black' }}>
               Sign up
@@ -37,9 +32,10 @@ const SignUp = () => {
             </h2>
           </div>
 
-          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+          {/* Input Fields Container */}
+          <div className="mt-8 space-y-5">
             
-            {/* Full Name */}
+            {/* Full Name Input */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -59,7 +55,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Phone Number */}
+          {/* Phone Number */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -79,7 +75,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Email */}
+            {/* Email Input */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -99,7 +95,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Password */}
+            {/* Password Input */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -119,15 +115,15 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Terms & Conditions */}
+            {/* Terms & Conditions Checkbox */}
             <div className="flex items-start">
               <div className="flex items-center">
                 <input
                   id="agree-terms"
                   name="agree-terms"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer mt-1"
-                  style={{ accentColor: BRAND_COLOR }}
+                  className="h-4 w-4 rounded border-gray-300 text-green focus:ring-green-500 cursor-pointer mt-1"
+
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
                 />
@@ -139,7 +135,17 @@ const SignUp = () => {
 
             {/* Submit Button */}
             <div>
-              <button type="submit" 
+              <button 
+                type="button"
+                onClick={() => {
+                  console.log("Sign Up Data:", { 
+                    fullName, 
+                    phoneNumber, 
+                    email, 
+                    password, 
+                    agreeTerms 
+                  })
+                }}
                 className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               >
                 <span className="flex items-center gap-2">
@@ -148,7 +154,7 @@ const SignUp = () => {
                 </span>
               </button>
             </div>
-          </form>
+          </div>
 
           {/* Social Login Divider */}
           <div className="relative">
@@ -160,7 +166,7 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* Social Buttons */}
+          {/* Social Login Buttons */}
           <div className="grid grid-cols-4 gap-3">
             <button className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-white transition-colors">
               <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
@@ -174,7 +180,7 @@ const SignUp = () => {
             </button>
           </div>
 
-          {/* Footer Login Link */}
+          {/* Footer Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
               Already have an account?{' '}
