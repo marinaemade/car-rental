@@ -1,42 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // Heroicons for UI icons
-import { UserIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import {
+  UserIcon,
+  LockClosedIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 // React Icons for Brand icons (Facebook, Apple)
-import { FaFacebookF, FaApple } from 'react-icons/fa';
+import { FaFacebookF, FaApple } from "react-icons/fa";
 // Using it to gro to sign up page if the user doesn't have an account
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import Footer from "../../../components/common/Footer/Footer";
+import Nav from "../../../components/user/navbar/Nav";
 
 // Define the exact green color from the design
-const BRAND_COLOR = '#64ff4f'; 
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password, rememberMe });
+    console.log("Login attempt:", { email, password, rememberMe });
   };
 
   return (
     <>
+      <Nav />
 
       {/* --- Main Content --- */}
-      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 mt-10">
         <div className="max-w-md w-full space-y-8 bg-white">
-          
           <div className="text-center">
-            <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-4" style={{ backgroundColor: '#16a34a30', color: 'black' }}>
-              Sign in
-            </div>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
-              Welcome Back
+              Welcome Back to <span className="text-green">RahalCar</span>
             </h2>
           </div>
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
-            
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -83,16 +84,22 @@ const Login = () => {
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer"
-                  style={{ accentColor: '#16a34a' }} // ← غيرتي اللون هنا
+                  style={{ accentColor: "#16a34a" }} // ← غيرتي اللون هنا
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-500 cursor-pointer">
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-gray-500 cursor-pointer"
+                >
                   Remember me
                 </label>
               </div>
               <div className="text-sm">
-                <a href="#" className="font-medium hover:underline text-gray-500">
+                <a
+                  href="#"
+                  className="font-medium hover:underline text-gray-500"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -100,7 +107,8 @@ const Login = () => {
 
             {/* Submit Button */}
             <div>
-              <button type="submit" 
+              <button
+                type="submit"
                 className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               >
                 <span className="flex items-center gap-2">
@@ -117,14 +125,20 @@ const Login = () => {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or connect with your social account</span>
+              <span className="px-2 bg-white text-gray-500">
+                Or connect with your social account
+              </span>
             </div>
           </div>
 
           {/* Social Buttons */}
           <div className="grid grid-cols-4 gap-3">
             <button className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-white transition-colors">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
               Sign up with Google
             </button>
             <button className="col-span-1 flex items-center justify-center py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-gray-50 transition-colors">
@@ -138,8 +152,8 @@ const Login = () => {
           {/* Footer Register Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
-              Don't have an account?{' '}
-              <Link 
+              Don't have an account?{" "}
+              <Link
                 to="/register"
                 className="font-semibold text-black hover:underline"
               >
@@ -149,6 +163,7 @@ const Login = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 };

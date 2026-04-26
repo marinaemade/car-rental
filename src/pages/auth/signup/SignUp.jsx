@@ -5,6 +5,8 @@ import { UserIcon, LockClosedIcon, ArrowRightIcon, PhoneIcon } from '@heroicons/
 import { FaFacebookF, FaApple } from 'react-icons/fa';
 // Using it to go to login page if the user already has an account
 import { Link } from 'react-router-dom';
+import Nav from '../../../components/user/navbar/Nav';
+import Footer from '../../../components/common/Footer/Footer';
 
 // Define the exact green color from the design
 const BRAND_COLOR = '#64ff4f'; 
@@ -23,17 +25,15 @@ const SignUp = () => {
 
   return (
     <>
+      <Nav />
       {/* --- Main Content --- */}
-      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 mt-10">
         <div className="max-w-md w-full space-y-8 bg-white">
           
           {/* Header */}
           <div className="text-center">
-            <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-4" style={{ backgroundColor: '#16a34a30', color: 'black' }}>
-              Sign up
-            </div>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
-              Create Your Account
+              Create Your Account at <span  className='text-green'>RahalCar</span>
             </h2>
           </div>
 
@@ -188,6 +188,7 @@ const SignUp = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 };

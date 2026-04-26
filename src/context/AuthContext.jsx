@@ -1,1 +1,7 @@
-// AuthContext - Currently not in use
+const AuthContext = () => {
+  return (
+    <div>AuthContext</div>
+  )
+}
+
+export default AuthContext

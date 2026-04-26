@@ -1,1 +1,7 @@
-// BookingContext - Currently not in use
+const BookingContext = () => {
+  return (
+    <div>BookingContext</div>
+  )
+}
+
+export default BookingContext

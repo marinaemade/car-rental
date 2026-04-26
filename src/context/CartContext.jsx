@@ -1,1 +1,8 @@
-// CartContext - Currently not in use
+
+const CartContext = () => {
+  return (
+    <div>CartContext</div>
+  )
+}
+
+export default CartContext

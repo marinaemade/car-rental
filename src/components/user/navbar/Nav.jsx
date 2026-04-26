@@ -6,6 +6,7 @@ import {
   IconButton,
   Typography,
 } from "@material-tailwind/react";
+import Logo from "../../common/Logo/Logo";
 
 import {
   HomeIcon,
@@ -62,15 +63,7 @@ const Nav = () => {
     <Navbar className="fixed top-0 left-0 right-0 z-50 w-full max-w-full bg-black shadow-lg border-b border-lightDark rounded-none px-4 py-3 lg:px-8">
       <div className="flex items-center justify-between w-full">
         {/* LOGO */}
-        <Link
-          to="/"
-          className="flex items-center gap-2 text-white font-bold text-lg group"
-        >
-          <TruckIcon className="h-6 w-6 text-green transition-transform group-hover:rotate-12" />
-          <span className="transition-colors group-hover:text-grayLight">
-            Rahal<span className="text-green">Car</span>
-          </span>
-        </Link>
+        <Logo />
 
         {/* DESKTOP LINKS */}
         <div className="hidden lg:block">{navList}</div>
