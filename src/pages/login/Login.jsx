@@ -6,6 +6,9 @@ import { FaFacebookF, FaApple } from 'react-icons/fa';
 // Using it to gro to sign up page if the user doesn't have an account
 import { Link } from 'react-router-dom';
 
+import { jwtDecode } from "jwt-decode";
+
+
 // Define the exact green color from the design
 const BRAND_COLOR = '#64ff4f'; 
 
@@ -14,16 +17,26 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Login attempt:', { email, password, rememberMe });
+  //when the user clicks on submit button
+  const submitLogin = (e) => { 
+    if (false){
+    }
+    else{
+      //send data to BackEnd
+
+      //data
+      const data = jwtDecode({/*"token"*/});
+      console.log(data);
+    }
   };
+
+
 
   return (
     <>
 
       {/* --- Main Content --- */}
-      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 bg-white">
           
           <div className="text-center">
@@ -35,7 +48,7 @@ const Login = () => {
             </h2>
           </div>
 
-          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-5" onSubmit={submitLogin}>
             
             <div>
               <div className="relative">
