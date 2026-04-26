@@ -3,8 +3,7 @@ import Hero from "./Hero";
 import HowItWorks from './HowItWorks';
 import TermsConditions from "./TermsConditions";
 import Testimonials from "./Testimonials";
-import ScrollToTop from './../../components/ScrollToTop/ScrollToTop';
-
+import ScrollToTop from "../../../components/common/ScrollToTop/ScrollToTop";
 const Home = () => {
   return (
     <>
