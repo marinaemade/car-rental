@@ -24,7 +24,7 @@ const SignUp = () => {
   return (
     <>
       {/* --- Main Content --- */}
-      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8 bg-white">
           
           {/* Header */}
@@ -53,8 +53,8 @@ const SignUp = () => {
                   required
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="Full Name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  value={fullName} 
+                  onChange={(e) => setFullName(e.target.value)} //To allow the state of the fullName changes when the user writes his name
                 />
               </div>
             </div>
@@ -69,10 +69,12 @@ const SignUp = () => {
                   id="phone-number"
                   name="phoneNumber"
                   type="tel"
+                  pattern="[0-9]*"
                   autoComplete="tel"
                   required
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="Phone Number"
+                  minLength="11"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                 />
