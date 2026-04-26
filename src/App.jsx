@@ -1,63 +1,72 @@
-import {Route, Routes,Link} from "react-router-dom"
-import Home from './pages/home/Home';
-import NotFound from './pages/notFound/NotFound';
-import Login from './pages/login/Login';
-import SignUp from './pages/signup/SignUp';
-import Admin from './pages/adminPage/Admin';
-import User from './pages/userPage/User';
-import CarDetails from './pages/carDetails/CarDetails';
-import Nav from './components/navbar/Nav';
-import About from './pages/about/About';
-import Footer from "./components/footer/Footer";
-import Contact from './pages/contact/Contact';
-import Cars from './pages/cars/Cars';
-import Cart from './pages/Cart/Cart';
-import Reservation from './pages/reservation/Reservation';
-import Checkout from './pages/checkout/Checkout';
+import { Route, Routes } from "react-router-dom";
+import UserLayout from "./layouts/UserLayout";
+import AdminLayout from "./layouts/AdminLayout";
 
+// User Pages
+import Home from "./pages/user/home/Home";
+import About from "./pages/user/about/About";
+import Contact from "./pages/user/contact/Contact";
+import Cars from "./pages/user/cars/Cars";
+import CarDetails from "./pages/user/carDetails/CarDetails";
+import Cart from "./pages/user/Cart/Cart";
+import Reservation from "./pages/user/reservation/Reservation";
+import Checkout from "./pages/user/checkout/Checkout";
+import User from "./pages/user/userPage/User";
+
+// Auth Pages
+import Login from "./pages/auth/login/Login";
+import SignUp from "./pages/auth/signup/SignUp";
+
+// Admin Pages
+import Dashboard from "./pages/admin/Dashboard";
+import Bookings from "./pages/admin/Bookings";
+import Units from "./pages/admin/Units/index";
+import Clients from "./pages/admin/Clients";
+import Drivers from "./pages/admin/Drivers";
+import Payments from "./pages/admin/Financials/Payments";
+import Expenses from "./pages/admin/Financials/Expenses";
+import Tracking from "./pages/admin/Tracking";
+import Messages from "./pages/admin/Messages";
+
+import NotFound from "./pages/notFound/NotFound";
 
 const App = () => {
   return (
-    <div>
-      <Nav/>
+    <Routes>
+      {/* User Routes with UserLayout */}
+      <Route path="/" element={<UserLayout />}>
+        <Route index element={<Home />} />
+        <Route path="user" element={<User />} />
+        <Route path="about" element={<About />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="cars" element={<Cars />} />
+        <Route path="car/:id" element={<CarDetails />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="reservation" element={<Reservation />} />
+        <Route path="checkout" element={<Checkout />} />
+      </Route>
 
-      <Routes>
-        // Marina
-        <Route path="/" element={<Home/>}/>
-        <Route path="/user" element={<User/>}/>
-        <Route path="/about" element={<About/>}/>
-        <Route path="/contact" element={<Contact/>}/>
-      
-        // Hanin
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<SignUp/>}/>
+      {/* Auth Routes (no layout) */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<SignUp />} />
 
-        //Rahma
-        <Route path="/dashboard" element={<Admin/>}/>
+      {/* Admin Routes with AdminLayout */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="bookings" element={<Bookings />} />
+        <Route path="units" element={<Units />} />
+        <Route path="clients" element={<Clients />} />
+        <Route path="drivers" element={<Drivers />} />
+        <Route path="financials/payments" element={<Payments />} />
+        <Route path="financials/expenses" element={<Expenses />} />
+        <Route path="tracking" element={<Tracking />} />
+        <Route path="messages" element={<Messages />} />
+      </Route>
 
-       
-         
+      {/* Not Found */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
 
-
-        //Merna
-       <Route path="/car/:id" element={<CarDetails />} />
-        <Route path="/cars" element={<Cars/>}/>
-
-        //Fatma
-        <Route path="/cart" element={<Cart/>}/>
-        <Route path="/reservation" element={<Reservation/>}/>
-
-        //Mina
-        <Route path="/checkout" element={<Checkout/>}/>
-
-        // Not Found
-        <Route path="*" element={<NotFound/>}/>
-      </Routes>
-
-      <Footer/>
-
-    </div>
-  )
-}
-
-export default App
+export default App;
