@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 // Heroicons for UI icons
 import { UserIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 // React Icons for Brand icons (Facebook, Apple)
@@ -7,17 +7,23 @@ import { FaFacebookF, FaApple } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 import { jwtDecode } from "jwt-decode";
+//Auth Context
+import AuthContext from "../../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
+  const test = useContext(AuthContext)
+  console.log(test)
+
   //when the user clicks on submit button
-  const submitLogin = (e) => { 
+  const submitLogin = async() => { 
     if (false){
     }
     else{
+      //try..catch for fetch.then 
       //send data to BackEnd
 
       //data
