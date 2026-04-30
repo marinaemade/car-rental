@@ -21,8 +21,12 @@ import {
   VideoCameraIcon, // For YouTube/Video
 } from "@heroicons/react/24/outline";
 
+import { useAuth } from "../../../context/AuthContext";
+
 const Nav = () => {
   const [openNav, setOpenNav] = useState(false);
+
+const {logged}=useAuth();
 
   useEffect(() => {
     const handleResize = () => {

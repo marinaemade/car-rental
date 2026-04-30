@@ -1,22 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { use, useContext, useEffect, useState } from 'react';
 // Heroicons for UI icons
 import { UserIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 // React Icons for Brand icons (Facebook, Apple)
 import { FaFacebookF, FaApple } from 'react-icons/fa';
 // Using it to gro to sign up page if the user doesn't have an account
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { jwtDecode } from "jwt-decode";
 //Auth Context
-import AuthContext from "../../context/AuthContext";
+import AuthContext, { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const test = useContext(AuthContext)
-  console.log(test)
+  const {login} = useAuth()
+  const navigate = useNavigate()
 
   //when the user clicks on submit button
   const submitLogin = async() => { 
@@ -24,8 +24,18 @@ const Login = () => {
     }
     else{
       //try..catch for fetch.then 
-      //send data to BackEnd
-
+      {/*try{
+        const req = await fetch( ,{
+          method: "post",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringfy(email,pass),
+      });
+      const {accessToken} = await req.json();
+      login(accessToken);
+        navigate("/pages/user/home") //navigate to home
+      }
+      catch(e) {
+      } */}
       //data
       const data = jwtDecode({/*"token"*/});
       console.log(data);
