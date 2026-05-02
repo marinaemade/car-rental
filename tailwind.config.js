@@ -27,5 +27,7 @@ module.exports = withMT({
     },
   },
   plugins: [],
+   darkMode: 'class',
 });
+
 
