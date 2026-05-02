@@ -1,51 +1,85 @@
 import React, { useState } from 'react';
 // Heroicons for UI icons
-import { UserIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import { UserIcon, LockClosedIcon, ArrowRightIcon, PhoneIcon } from '@heroicons/react/24/outline';
 // React Icons for Brand icons (Facebook, Apple)
 import { FaFacebookF, FaApple } from 'react-icons/fa';
-// Using it to gro to sign up page if the user doesn't have an account
+// Using it to go to login page if the user already has an account
 import { Link } from 'react-router-dom';
+import Nav from '../../../components/user/navbar/Nav';
+import Footer from '../../../components/common/Footer/Footer';
 
-import { jwtDecode } from "jwt-decode";
+// Define the exact green color from the design
+const BRAND_COLOR = '#64ff4f'; 
 
-const Login = () => {
+const SignUp = () => {
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
-  //when the user clicks on submit button
-  const submitLogin = (e) => { 
-    if (false){
-    }
-    else{
-      //send data to BackEnd
-
-      //data
-      const data = jwtDecode({/*"token"*/});
-      console.log(data);
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Sign up attempt:', { fullName, phoneNumber, email, password, agreeTerms });
   };
-
-
 
   return (
     <>
-
+      <Nav />
       {/* --- Main Content --- */}
-      <main className="flex-grow flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 mt-10">
         <div className="max-w-md w-full space-y-8 bg-white">
           
+          {/* Header */}
           <div className="text-center">
-            <div className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-4" style={{ backgroundColor: '#16a34a30', color: 'black' }}>
-              Sign in
-            </div>
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
-              Welcome Back
+              Create Your Account at <span  className='text-green'>RahalCar</span>
             </h2>
           </div>
 
-          <form className="mt-8 space-y-5" onSubmit={submitLogin}>
+          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
             
+            {/* Full Name */}
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                  <UserIcon className="h-5 w-5" />
+                </div>
+                <input
+                  id="full-name"
+                  name="fullName"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                  <PhoneIcon className="h-5 w-5" />
+                </div>
+                <input
+                  id="phone-number"
+                  name="phoneNumber"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Email */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -65,6 +99,7 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -74,7 +109,7 @@ const Login = () => {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="•••••••••••••"
@@ -84,26 +119,21 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
+            {/* Terms & Conditions */}
+            <div className="flex items-start">
               <div className="flex items-center">
                 <input
-                  id="remember-me"
-                  name="remember-me"
+                  id="agree-terms"
+                  name="agree-terms"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer"
-                  style={{ accentColor: '#16a34a' }} // ← غيرتي اللون هنا
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer mt-1"
+                  style={{ accentColor: BRAND_COLOR }}
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-500 cursor-pointer">
-                  Remember me
+                <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-500 cursor-pointer">
+                  I agree to the <a href="#" className="font-medium text-black hover:underline">Terms & Conditions</a>
                 </label>
-              </div>
-              <div className="text-sm">
-                <a href="#" className="font-medium hover:underline text-gray-500">
-                  Forgot password?
-                </a>
               </div>
             </div>
 
@@ -113,7 +143,7 @@ const Login = () => {
                 className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               >
                 <span className="flex items-center gap-2">
-                  Sign in
+                  Create Account
                   <ArrowRightIcon className="w-4 h-4" />
                 </span>
               </button>
@@ -126,7 +156,7 @@ const Login = () => {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or connect with your social account</span>
+              <span className="px-2 bg-white text-gray-500">Or sign up with your social account</span>
             </div>
           </div>
 
@@ -144,22 +174,23 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Footer Register Link */}
+          {/* Footer Login Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
-              Don't have an account?{' '}
+              Already have an account?{' '}
               <Link 
-                to="/register"
+                to="/login"
                 className="font-semibold text-black hover:underline"
               >
-                Register Here!
+                Sign in Here!
               </Link>
             </p>
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 };
 
-export default Login;
+export default SignUp;
