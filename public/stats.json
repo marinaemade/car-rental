@@ -1,0 +1,22 @@
+{
+  "summary": {
+    "totalRevenue": 98450,
+    "activeBookings": 5,
+    "totalCars": 50,
+    "newCustomers": 120
+  },
+  "revenueByMonth": [
+    { "month": "Jan", "amount": 6200 },
+    { "month": "Feb", "amount": 8100 },
+    { "month": "Mar", "amount": 7400 },
+    { "month": "Apr", "amount": 9800 },
+    { "month": "May", "amount": 11200 },
+    { "month": "Jun", "amount": 13500 },
+    { "month": "Jul", "amount": 12100 },
+    { "month": "Aug", "amount": 9600 },
+    { "month": "Sep", "amount": 7800 },
+    { "month": "Oct", "amount": 8900 },
+    { "month": "Nov", "amount": 5400 },
+    { "month": "Dec", "amount": 4450 }
+  ]
+}
