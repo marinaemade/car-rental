@@ -2,11 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { FaCarSide } from "react-icons/fa6";
-import {
-  Navbar,
-  Collapse,
-  IconButton,
-} from "@material-tailwind/react";
+import { Navbar, Collapse, IconButton } from "@material-tailwind/react";
 import Logo from "../../common/Logo/Logo"; // هذا المسار صحيح لأنه يخرج مستويين فقط
 
 import {
@@ -22,9 +18,9 @@ import {
 
 const Nav = () => {
   const [openNav, setOpenNav] = useState(false);
-  
+
   // 3. استهلاك الـ Context
-const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,9 +54,9 @@ const { theme, toggleTheme } = useContext(ThemeContext);
           Contact
         </Link>
       </li>
-         <li>
+      <li>
         <Link to="/cars" className={linkClass}>
-          < FaCarSide className="h-5 w-5" />
+          <FaCarSide className="h-5 w-5" />
           Cars
         </Link>
       </li>
@@ -79,7 +75,6 @@ const { theme, toggleTheme } = useContext(ThemeContext);
 
         {/* RIGHT SIDE: Theme Toggle + Profile */}
         <div className="flex items-center gap-1 sm:gap-3">
-          
           {/* 4. زرار الـ Dark Mode Mode Toggle */}
           <IconButton
             variant="text"

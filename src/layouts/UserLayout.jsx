@@ -14,7 +14,7 @@ import User from "../pages/user/userPage/User";
 import ThemeProvider from "../context/ThemeContext";
 const UserLayout = () => {
   return (
-    <ThemeProvider> {/* ✅ لفّي كل ال Layout */}
+    <ThemeProvider> 
       <div className="min-h-screen flex flex-col">
         <ScrollToTop />
         <Nav />
