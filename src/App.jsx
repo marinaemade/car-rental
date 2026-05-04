@@ -13,14 +13,12 @@ const App = () => {
       {/* User Routes */}
       <Route path="/*" element={<UserLayout />} />
 
-      {/* Auth Routes (no layout) */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<SignUp />} />
 
-      {/* Admin Routes */}
       <Route path="/admin/*" element={<AdminLayout />} />
 
-      {/* Not Found */}
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
