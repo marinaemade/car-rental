@@ -5,6 +5,13 @@ import { Link } from "react-router-dom";
 
 export default function CarBooking() {
   const [openStep, setOpenStep] = useState(1);
+  // const [paymentMethod, setPaymentMethod] = useState(""); // ✅ NEW
+
+  // const navigate = useNavigate(); 
+  
+
+
+
   const toggleStep = (step) => {
     setOpenStep(openStep === step ? 0 : step);
   };
@@ -256,7 +263,7 @@ export default function CarBooking() {
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
             <span className="font-bold">Vehicle:</span>
-            <span className="text-gray-600">Rivian R1S</span>
+            <span className="text-gray-600">BMW </span>
           </div>
 
           <div className="flex justify-between">
@@ -268,7 +275,7 @@ export default function CarBooking() {
 
           <div className="flex justify-between">
             <span className="font-bold">Pickup Option:</span>
-            <span className="text-gray-600">New York City,NY</span>
+            <span className="text-gray-600">New York, NY</span>
           </div>
 
           <div className="flex justify-between">

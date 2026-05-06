@@ -9,6 +9,7 @@ import Cars from "../pages/user/cars/Cars";
 import CarDetails from "../pages/user/carDetails/CarDetails";
 import Cart from "../pages/user/Cart/Cart";
 import Reservation from "../pages/user/reservation/Reservation";
+import PaymentDetails from "../pages/user/reservation/PaymentDetails";
 import Checkout from "../pages/user/checkout/Checkout";
 import User from "../pages/user/userPage/User";
 
@@ -27,6 +28,7 @@ const UserLayout = () => {
           <Route path="car/:id" element={<CarDetails />} />
           <Route path="cart" element={<Cart />} />
           <Route path="reservation" element={<Reservation />} />
+           <Route path="payment" element={<PaymentDetails />} />
           <Route path="checkout" element={<Checkout />} />
         </Routes>
       </main>
