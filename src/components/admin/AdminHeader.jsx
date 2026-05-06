@@ -1,68 +1,36 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { IconButton } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import Logo from "../common/Logo/Logo";
 
-const AdminHeader = () => {
-  const [openNav, setOpenNav] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 960) setOpenNav(false);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const menuItems = [
-    { to: "/admin", label: "Dashboard" },
-    { to: "/admin/bookings", label: "Bookings" },
-    { to: "/admin/units", label: "Units" },
-    { to: "/admin/clients", label: "Clients" },
-    { to: "/admin/drivers", label: "Drivers" },
-    { to: "/admin/financials/payments", label: "Financials" },
-    { to: "/admin/tracking", label: "Tracking" },
-    { to: "/admin/messages", label: "Messages" },
-  ];
+const AdminHeader = ({ onToggleSidebar, sidebarOpen }) => {
+  const navigate = useNavigate();
 
   return (
-    <>
-      {/* Mobile Header */}
-      <div className="md:hidden bg-black text-grayLight p-4 flex justify-between items-center border-b border-lightDark">
-        <Logo to="/admin" />
-        <IconButton
-          variant="text"
-          className="text-grayLight hover:text-green"
-          onClick={() => setOpenNav(!openNav)}
+    <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-black/70 backdrop-blur-xl border-b border-white/5 shadow-lg">
+      <div className="flex items-center gap-4">
+        <button
+          onClick={onToggleSidebar}
+          className="md:hidden p-2 rounded-xl text-gray hover:text-white hover:bg-white/10 transition-colors"
         >
-          {openNav ? (
-            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-          ) : (
-            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-          )}
-        </IconButton>
+          {sidebarOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
+        </button>
+        <h1 className="text-xl md:text-2xl font-bold text-white tracking-tight">Admin Panel</h1>
       </div>
 
-      {/* Mobile Navigation */}
-      {openNav && (
-        <div className="md:hidden bg-black text-grayLight p-4 border-b border-lightDark">
-          <ul className="flex flex-col gap-2">
-            {menuItems.map((item) => (
-              <li key={item.to}>
-                <Link
-                  to={item.to}
-                  className="block py-2 px-4 rounded text-grayLight hover:bg-lightDark hover:text-green transition-all"
-                  onClick={() => setOpenNav(false)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+      <div className="flex items-center gap-2 md:gap-4">
+        <div
+          onClick={() => navigate("/admin")}
+          className="flex items-center gap-2.5 cursor-pointer group"
+        >
+          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-green to-darkGreen flex items-center justify-center text-black font-bold text-sm border-2 border-surface group-hover:border-green transition-colors shadow-lg">
+            AD
+          </div>
+          <div className="hidden lg:block">
+            <p className="text-sm font-semibold text-white leading-none">Admin User</p>
+            <p className="text-xs text-green leading-none mt-0.5">Administrator</p>
+          </div>
         </div>
-      )}
-    </>
+      </div>
+    </header>
   );
 };
 

@@ -1,0 +1,14 @@
+[
+  { "id": "U-501", "name": "Mina Lotfy", "email": "mina.lotfy@email.com", "phone": "01200000001", "address": "Cairo, Egypt", "joinDate": "2023-10-15", "totalBookings": 7, "status": "Active" },
+  { "id": "U-502", "name": "Ahmed Samy", "email": "ahmed.samy@email.com", "phone": "01100000002", "address": "Alexandria, Egypt", "joinDate": "2024-01-05", "totalBookings": 3, "status": "Active" },
+  { "id": "U-503", "name": "Sara Ali", "email": "sara.ali@email.com", "phone": "01000000003", "address": "Giza, Egypt", "joinDate": "2024-03-12", "totalBookings": 1, "status": "Blocked" },
+  { "id": "U-504", "name": "Marina Emad", "email": "marina.emad@email.com", "phone": "01550000004", "address": "Maadi, Cairo", "joinDate": "2023-12-01", "totalBookings": 2, "status": "Active" },
+  { "id": "U-505", "name": "Youssef Karim", "email": "youssef.karim@email.com", "phone": "01600000005", "address": "New Cairo, Egypt", "joinDate": "2023-08-22", "totalBookings": 9, "status": "Active" },
+  { "id": "U-506", "name": "Layla Hassan", "email": "layla.hassan@email.com", "phone": "01700000006", "address": "Zamalek, Cairo", "joinDate": "2023-11-30", "totalBookings": 5, "status": "Active" },
+  { "id": "U-507", "name": "Omar Nasser", "email": "omar.nasser@email.com", "phone": "01800000007", "address": "Heliopolis, Cairo", "joinDate": "2024-02-14", "totalBookings": 4, "status": "Active" },
+  { "id": "U-508", "name": "Nour El-Din", "email": "nour.eldin@email.com", "phone": "01900000008", "address": "Mohandessin, Cairo", "joinDate": "2024-04-01", "totalBookings": 2, "status": "Pending" },
+  { "id": "U-509", "name": "Kareem Adel", "email": "kareem.adel@email.com", "phone": "01020000009", "address": "Nasr City, Cairo", "joinDate": "2023-09-10", "totalBookings": 6, "status": "Active" },
+  { "id": "U-510", "name": "Rana Mahmoud", "email": "rana.mahmoud@email.com", "phone": "01030000010", "address": "Sheraton, Cairo", "joinDate": "2023-07-05", "totalBookings": 8, "status": "Active" },
+  { "id": "U-511", "name": "Tarek Saleh", "email": "tarek.saleh@email.com", "phone": "01040000011", "address": "Dokki, Giza", "joinDate": "2024-05-01", "totalBookings": 1, "status": "Pending" },
+  { "id": "U-512", "name": "Dina Fouad", "email": "dina.fouad@email.com", "phone": "01050000012", "address": "Garden City, Cairo", "joinDate": "2023-06-18", "totalBookings": 4, "status": "Active" }
+]

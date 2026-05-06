@@ -1,0 +1,10 @@
+[
+  { "id": "D-201", "name": "Mohamed Ibrahim", "phone": "01500000005", "license": "L-998877", "status": "On Trip", "rating": 4.8, "experience": "5 Years", "totalTrips": 142, "joinDate": "2019-03-10" },
+  { "id": "D-202", "name": "Sayed Mansour", "phone": "01200000009", "license": "L-445566", "status": "On Trip", "rating": 4.5, "experience": "3 Years", "totalTrips": 89, "joinDate": "2021-07-22" },
+  { "id": "D-203", "name": "Khaled Farouk", "phone": "01600000013", "license": "L-772211", "status": "On Trip", "rating": 4.9, "experience": "7 Years", "totalTrips": 210, "joinDate": "2017-01-15" },
+  { "id": "D-204", "name": "Hassan Zaki", "phone": "01700000014", "license": "L-334455", "status": "Available", "rating": 4.3, "experience": "2 Years", "totalTrips": 54, "joinDate": "2022-09-05" },
+  { "id": "D-205", "name": "Amr Diab", "phone": "01800000015", "license": "L-667788", "status": "On Trip", "rating": 4.7, "experience": "6 Years", "totalTrips": 178, "joinDate": "2018-05-20" },
+  { "id": "D-206", "name": "Tamer Hosny", "phone": "01900000016", "license": "L-112233", "status": "Available", "rating": 4.6, "experience": "4 Years", "totalTrips": 115, "joinDate": "2020-11-01" },
+  { "id": "D-207", "name": "Wael Kfoury", "phone": "01020000017", "license": "L-889900", "status": "On Trip", "rating": 4.4, "experience": "3 Years", "totalTrips": 78, "joinDate": "2021-04-12" },
+  { "id": "D-208", "name": "Sherif Mounir", "phone": "01030000018", "license": "L-556677", "status": "Off Duty", "rating": 4.2, "experience": "1 Year", "totalTrips": 31, "joinDate": "2023-08-30" }
+]

@@ -8,8 +8,6 @@ import { Link } from 'react-router-dom';
 import Nav from '../../../components/user/navbar/Nav';
 import Footer from '../../../components/common/Footer/Footer';
 
-// Define the exact green color from the design
-const BRAND_COLOR = '#64ff4f'; 
 
 const SignUp = () => {
   const [fullName, setFullName] = useState('');
@@ -126,8 +124,7 @@ const SignUp = () => {
                   id="agree-terms"
                   name="agree-terms"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer mt-1"
-                  style={{ accentColor: BRAND_COLOR }}
+                  className="h-4 w-4 rounded border-gray-300 text-green focus:ring-green-500 cursor-pointer mt-1"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
                 />
