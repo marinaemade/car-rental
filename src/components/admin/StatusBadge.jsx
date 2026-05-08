@@ -1,3 +1,4 @@
+// Status badge 
 const getStyles = (status = "") => {
   const s = status.toLowerCase();
   if (s.includes("available") || s.includes("completed") || s.includes("active"))

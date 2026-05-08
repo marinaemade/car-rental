@@ -1,3 +1,4 @@
+// Footer
 import { Typography, IconButton } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 // Material Tailwind / HeroIcons for UI

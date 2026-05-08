@@ -1,3 +1,4 @@
+// Logo
 import { Link } from "react-router-dom";
 import { TruckIcon } from "@heroicons/react/24/outline";
 

@@ -6,5 +6,7 @@
   { "id": "D-205", "name": "Amr Diab", "phone": "01800000015", "license": "L-667788", "status": "On Trip", "rating": 4.7, "experience": "6 Years", "totalTrips": 178, "joinDate": "2018-05-20" },
   { "id": "D-206", "name": "Tamer Hosny", "phone": "01900000016", "license": "L-112233", "status": "Available", "rating": 4.6, "experience": "4 Years", "totalTrips": 115, "joinDate": "2020-11-01" },
   { "id": "D-207", "name": "Wael Kfoury", "phone": "01020000017", "license": "L-889900", "status": "On Trip", "rating": 4.4, "experience": "3 Years", "totalTrips": 78, "joinDate": "2021-04-12" },
-  { "id": "D-208", "name": "Sherif Mounir", "phone": "01030000018", "license": "L-556677", "status": "Off Duty", "rating": 4.2, "experience": "1 Year", "totalTrips": 31, "joinDate": "2023-08-30" }
+  { "id": "D-208", "name": "Sherif Mounir", "phone": "01030000018", "license": "L-556677", "status": "Off Duty", "rating": 4.2, "experience": "1 Year", "totalTrips": 31, "joinDate": "2023-08-30" },
+  { "id": "D-209", "name": "Hany Shaker", "phone": "01040000019", "license": "L-223344", "status": "Available", "rating": 4.5, "experience": "5 Years", "totalTrips": 120, "joinDate": "2019-12-10" },
+  { "id": "D-210", "name": "Latifa", "phone": "01050000020", "license": "L-998800", "status": "On Trip", "rating": 4.8, "experience": "6 Years", "totalTrips": 150, "joinDate": "2018-03-25" }
 ]

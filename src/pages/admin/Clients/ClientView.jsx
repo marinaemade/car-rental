@@ -1,3 +1,4 @@
+// View client details 
 import { useNavigate, useParams } from "react-router-dom";
 import { useAdmin } from "../../../context/AdminContext";
 import StatusBadge from "../../../components/admin/StatusBadge";

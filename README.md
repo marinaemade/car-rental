@@ -1,6 +1,6 @@
 # Car Rental Application
 
-A full-stack car rental management system with user and admin interfaces.
+A full-stack car rental management system with user and admin dashboard.
 
 ## Team Members
 - Marina Emad

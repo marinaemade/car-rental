@@ -1,3 +1,4 @@
+// Client index
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmin } from "../../../context/AdminContext";

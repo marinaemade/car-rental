@@ -1,3 +1,4 @@
+// User layout
 import { Route, Routes } from "react-router-dom";
 import Nav from "../components/user/navbar/Nav";
 import Footer from "../components/common/Footer/Footer";
