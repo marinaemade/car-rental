@@ -1,3 +1,4 @@
+// Payments
 import { useState } from "react";
 import { useAdmin } from "../../../context/AdminContext";
 import StatusBadge from "../../../components/admin/StatusBadge";

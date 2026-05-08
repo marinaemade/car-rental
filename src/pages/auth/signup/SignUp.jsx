@@ -1,3 +1,4 @@
+// SignUp
 import React, { useState } from 'react';
 // Heroicons for UI icons
 import { UserIcon, LockClosedIcon, ArrowRightIcon, PhoneIcon } from '@heroicons/react/24/outline';

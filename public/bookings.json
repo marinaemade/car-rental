@@ -18,5 +18,10 @@
   { "id": "BK-1017", "carId": 6, "carName": "Aston Martin DB12", "customerName": "Layla Hassan", "customerId": "U-506", "driverId": "D-208", "startDate": "2024-03-20", "endDate": "2024-03-22", "totalPrice": 3200, "status": "Completed", "paymentMethod": "Bank Transfer" },
   { "id": "BK-1018", "carId": 20, "carName": "Maserati Grecale", "customerName": "Omar Nasser", "customerId": "U-507", "driverId": null, "startDate": "2024-05-14", "endDate": "2024-05-16", "totalPrice": 1500, "status": "Cancelled", "paymentMethod": "PayPal" },
   { "id": "BK-1019", "carId": 16, "carName": "Tesla Model S Plaid", "customerName": "Nour El-Din", "customerId": "U-508", "driverId": "D-201", "startDate": "2024-05-09", "endDate": "2024-05-11", "totalPrice": 1100, "status": "Active", "paymentMethod": "Credit Card" },
-  { "id": "BK-1020", "carId": 4, "carName": "Cadillac Escalade", "customerName": "Rana Mahmoud", "customerId": "U-510", "driverId": null, "startDate": "2024-06-20", "endDate": "2024-06-25", "totalPrice": 1400, "status": "Confirmed", "paymentMethod": "Visa" }
+  { "id": "BK-1020", "carId": 4, "carName": "Cadillac Escalade", "customerName": "Rana Mahmoud", "customerId": "U-510", "driverId": null, "startDate": "2024-06-20", "endDate": "2024-06-25", "totalPrice": 1400, "status": "Confirmed", "paymentMethod": "Visa" },
+  { "id": "BK-1021", "carId": 13, "carName": "Nissan GT-R", "customerName": "Tarek Saleh", "customerId": "U-511", "driverId": null, "startDate": "2024-05-21", "endDate": "2024-05-23", "totalPrice": 900, "status": "Pending", "paymentMethod": "PayPal" },
+  { "id": "BK-1022", "carId": 17, "carName": "Subaru WRX STI", "customerName": "Dina Fouad", "customerId": "U-512", "driverId": null, "startDate": "2024-04-10", "endDate": "2024-04-12", "totalPrice": 400, "status": "Completed", "paymentMethod": "Visa" },
+  { "id": "BK-1023", "carId": 24, "carName": "Honda CR-V Hybrid", "customerName": "Sara Ali", "customerId": "U-503", "driverId": null, "startDate": "2024-05-26", "endDate": "2024-05-29", "totalPrice": 450, "status": "Confirmed", "paymentMethod": "Cash" },
+  { "id": "BK-1024", "carId": 21, "carName": "Kia EV6 GT-Line", "customerName": "Ahmed Samy", "customerId": "U-502", "driverId": null, "startDate": "2024-06-05", "endDate": "2024-06-08", "totalPrice": 500, "status": "Pending", "paymentMethod": "Visa" }
+
 ]

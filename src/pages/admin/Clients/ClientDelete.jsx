@@ -1,3 +1,4 @@
+// Delete client
 import { useNavigate, useParams } from "react-router-dom";
 import { useAdmin } from "../../../context/AdminContext";
 import { ArrowLeftIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
