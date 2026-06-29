@@ -18,10 +18,42 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
 
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+  setEmailError('');
+  setPasswordError('');
+  setPhoneError('');
+
+  //email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid Gmail address (e.g., user@gmail.com)');
+      return;
+    }
+
+    //phone validation
+      const phoneRegex = /^01[0125]\d{8}$/;
+      if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError('Please enter a valid Egyptian phone number');
+      return;
+  }
+
+
+    //password validation
+    if (password.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      return; 
+    }
+
     console.log('Sign up attempt:', { fullName, phoneNumber, email, password, agreeTerms });
   };
+
+    
 
   return (
     <>
@@ -71,12 +103,45 @@ const SignUp = () => {
                   type="tel"
                   autoComplete="tel"
                   required
-                  className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
-                  placeholder="Phone Number"
+                  className={`appearance-none block w-full pl-12 pr-3 py-4 border rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm ${
+                    phoneError ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50 focus:border-green-500'
+                  }`}
+                  placeholder="01XXXXXXXXX"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    if (value === '') {
+                    setPhoneNumber(value);
+                    setPhoneError('');
+                    return;
+                    }
+
+                    if (value.length < 3) {
+                    setPhoneNumber(value);
+                    setPhoneError('');
+                    return;
+                  }
+        
+
+                    const validPrefixes = ['010', '011', '012', '015'];
+                    const prefix = value.substring(0, 3);
+                    if (validPrefixes.includes(prefix)) {
+          
+                    if (value.length <= 11) {
+                      setPhoneNumber(value);
+                      setPhoneError('');
+                    }
+                  }
+
+                  else {
+                    setPhoneError('Phone must start with 010, 011, 012, or 015');
+                  
+                  }}}
+
+                  maxLength={11}
                 />
               </div>
+              {phoneError && <p className="text-red-500 text-xs mt-1 pl-2">{phoneError}</p>}
             </div>
 
             {/* Email */}
@@ -94,9 +159,13 @@ const SignUp = () => {
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="Email / Username"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    setEmailError('');}
+                  }
                 />
               </div>
+              {emailError && <p className="text-red-500 text-xs mt-1 pl-2">{emailError}</p>}
             </div>
 
             {/* Password */}
@@ -111,12 +180,18 @@ const SignUp = () => {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
+                  className={`appearance-none block w-full pl-12 pr-3 py-4 border rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm ${
+                    passwordError ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50 focus:border-green-500'
+                  }`}
                   placeholder="•••••••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError('');
+                  }}
                 />
               </div>
+              {passwordError && <p className="text-red-500 text-xs mt-1 pl-2">{passwordError}</p>}
             </div>
 
             {/* Terms & Conditions */}
