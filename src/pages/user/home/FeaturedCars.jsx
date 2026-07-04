@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { Typography, Button, Card, CardHeader, CardBody, CardFooter } from "@material-tailwind/react";
 import { 
@@ -9,10 +10,10 @@ import {
   BeakerIcon 
 } from "@heroicons/react/24/solid";
 
-const FeaturedCars = () => {
+const FeaturedCars = ({car}) => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Fetch data from the data.json file
     const fetchCars = async () => {
@@ -114,14 +115,14 @@ const FeaturedCars = () => {
               </CardBody>
 
               <CardFooter className="p-5 pt-0">
-                <Link to={`/carDetails/${id}`}>
+                
                   <Button
+                    onClick={() => navigate(`/cars/${id}`)}
                     fullWidth
                     className="bg-green text-black font-bold py-3 hover:bg-softGreen shadow-none hover:shadow-green/20"
                   >
                     View Details & Book
                   </Button>
-                </Link>
               </CardFooter>
             </Card>
           ))}
