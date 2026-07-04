@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Typography } from "@material-tailwind/react";
 import { 
   MagnifyingGlassIcon, 
@@ -6,6 +6,7 @@ import {
   CheckBadgeIcon, 
   HandThumbUpIcon 
 } from "@heroicons/react/24/outline";
+import { ThemeContext } from './../../../context/ThemeContext';
 
 const STEPS = [
   {
@@ -35,16 +36,26 @@ const STEPS = [
 ];
 
 const HowItWorks = () => {
+  const { theme } = useContext(ThemeContext);
+  const isDarkMode = theme === "dark";
+
+  // Dynamic Theme Styling Classes based on your palette
+  const bgClass = isDarkMode ? "bg-dark" : "bg-grayLight bg-opacity-30";
+  const borderClass = isDarkMode ? "border-lightDark" : "border-grayLight";
+  const textTitleClass = isDarkMode ? "text-white" : "text-black";
+  const textMutedClass = isDarkMode ? "text-gray" : "text-lightDark";
+  const badgeBgClass = isDarkMode ? "bg-black" : "bg-white";
+
   return (
-    <section className=" py-24 px-8 border-t border-lightDark bg-dark">
+    <section className={`py-24 px-8 border-t ${borderClass} ${bgClass} transition-colors duration-300`}>
       <div className="mx-auto max-w-7xl text-center">
         <Typography variant="small" className="text-green font-bold uppercase tracking-widest mb-4">
           Simple Process
         </Typography>
-        <Typography variant="h2" className="text-white text-4xl font-bold mb-6">
+        <Typography variant="h2" className={`${textTitleClass} text-4xl font-bold mb-6`}>
           Rent in 4 Easy Steps
         </Typography>
-        <Typography className="text-gray max-w-2xl mx-auto mb-20">
+        <Typography className={`${textMutedClass} max-w-2xl mx-auto mb-20`}>
           From browsing to driving — the entire process takes just a few minutes.
         </Typography>
 
@@ -53,21 +64,21 @@ const HowItWorks = () => {
             <div key={step.id} className="relative flex flex-col items-center group">
               {/* Connector Line (Hidden on mobile) */}
               {idx !== STEPS.length - 1 && (
-                <div className="hidden md:block absolute top-12 left-1/2 w-full h-[1px] bg-lightDark z-0" />
+                <div className={`hidden md:block absolute top-12 left-1/2 w-full h-[1px] ${borderClass} z-0`} />
               )}
               
               {/* Icon Circle */}
               <div className="relative z-10 mb-8 h-24 w-24 rounded-2xl bg-green flex items-center justify-center shadow-[0_0_20px_rgba(74,222,128,0.3)] transition-transform group-hover:scale-110">
                 <step.icon className="h-10 w-10 text-black" />
-                <div className="absolute -top-2 -right-2 h-8 w-8 bg-black border-2 border-green rounded-full flex items-center justify-center">
+                <div className={`absolute -top-2 -right-2 h-8 w-8 ${badgeBgClass} border-2 border-green rounded-full flex items-center justify-center`}>
                   <Typography className="text-green text-xs font-bold">{step.id}</Typography>
                 </div>
               </div>
 
-              <Typography variant="h5" className="text-white font-bold mb-3">
+              <Typography variant="h5" className={`${textTitleClass} font-bold mb-3`}>
                 {step.title}
               </Typography>
-              <Typography className="text-gray text-sm leading-relaxed">
+              <Typography className={`${textMutedClass} text-sm leading-relaxed`}>
                 {step.desc}
               </Typography>
             </div>
