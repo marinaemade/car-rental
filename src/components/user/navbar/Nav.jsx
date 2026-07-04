@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { FaCarSide } from "react-icons/fa6";
 import { Navbar, Collapse, IconButton } from "@material-tailwind/react";
-import Logo from "../../common/Logo/Logo"; // هذا المسار صحيح لأنه يخرج مستويين فقط
+import Logo from "../../common/Logo/Logo";
 
 import {
   HomeIcon,
@@ -37,9 +37,9 @@ const {logged}=useAuth();
   }, []);
 
   // تعديل بسيط في الألوان عشان تليق مع الـ Dark Mode
-  const linkClass =
-    "flex items-center gap-2 text-gray-500 dark:text-gray-300 font-medium transition-all duration-300 hover:text-green-500 hover:translate-x-1 lg:hover:translate-x-0 lg:hover:scale-105";
-
+ const linkClass =
+"flex items-center gap-2 text-black dark:text-grayLight font-medium transition-all duration-300 hover:text-green dark:hover:text-softGreen hover:-translate-y-0.5";
+  
   const navList = (
     <ul className="flex flex-col gap-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-8">
       <li>
@@ -70,8 +70,20 @@ const {logged}=useAuth();
   );
 
   return (
-    // أضفنا خلفية تتغير مع الثيم (bg-white dark:bg-black)
-    <Navbar className="fixed top-0 left-0 right-0 z-50 w-full max-w-full bg-white dark:bg-black shadow-lg border-b border-gray-200 dark:border-gray-800 rounded-none px-4 py-3 lg:px-8 transition-colors duration-300">
+    <Navbar
+      shadow={false}
+      blurred={false}
+      className="
+        fixed top-0 left-0 right-0 z-50
+        w-full max-w-full
+        rounded-none
+        bg-white dark:bg-black
+        border-b border-grayLight/40 dark:border-lightDark
+        shadow-md
+        px-4 py-3 lg:px-8
+        transition-all duration-300
+      "
+    >
       <div className="flex items-center justify-between w-full">
         {/* LOGO */}
         <Logo />
@@ -90,14 +102,14 @@ const {logged}=useAuth();
             {theme === "light" ? (
               <MoonIcon className="h-6 w-6 text-blue-gray-900" />
             ) : (
-              <SunIcon className="h-6 w-6 text-yellow-500" />
+              <SunIcon className="h-6 w-6 text-white" />
             )}
           </IconButton>
 
           <Link to="/login">
             <IconButton
               variant="text"
-              className="text-gray-700 dark:text-white hover:text-green-500 dark:hover:bg-gray-800"
+              className="text-black dark:text-white hover:text-green dark:hover:text-softGreen hover:bg-green/10 dark:hover:bg-lightDark transition-all duration-300"
             >
               <UserIcon className="h-6 w-6" />
             </IconButton>
@@ -106,7 +118,7 @@ const {logged}=useAuth();
           {/* Toggle Button for Mobile */}
           <IconButton
             variant="text"
-            className="lg:hidden text-gray-700 dark:text-white"
+            className="lg:hidden text-black dark:text-white hover:bg-green/10 dark:hover:bg-lightDark"
             onClick={() => setOpenNav(!openNav)}
           >
             {openNav ? (
