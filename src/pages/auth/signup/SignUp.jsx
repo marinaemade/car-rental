@@ -1,14 +1,9 @@
-// SignUp
 import React, { useState } from 'react';
-// Heroicons for UI icons
 import { UserIcon, LockClosedIcon, ArrowRightIcon, PhoneIcon } from '@heroicons/react/24/outline';
-// React Icons for Brand icons (Facebook, Apple)
 import { FaFacebookF, FaApple } from 'react-icons/fa';
-// Using it to go to login page if the user already has an account
 import { Link } from 'react-router-dom';
 import Nav from '../../../components/user/navbar/Nav';
 import Footer from '../../../components/common/Footer/Footer';
-
 
 const SignUp = () => {
   const [fullName, setFullName] = useState('');
@@ -17,28 +12,86 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
 
+  const [fullNameError, setFullNameError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [termsError, setTermsError] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Sign up attempt:', { fullName, phoneNumber, email, password, agreeTerms });
+
+    setFullNameError('');
+    setPhoneError('');
+    setEmailError('');
+    setPasswordError('');
+    setTermsError('');
+
+    let hasError = false;
+
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!fullName.trim()) {
+      setFullNameError('Full name is required');
+      hasError = true;
+    } else if (!nameRegex.test(fullName)) {
+      setFullNameError('Full name must contain only letters and spaces');
+      hasError = true;
+    }
+
+    const phoneRegex = /^01[0125][0-9]{8}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError('Phone number must be exactly 11 digits and start with 010, 011, 012, or 015');
+      hasError = true;
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(email.trim())) {
+      setEmailError('Email must end with @gmail.com');
+      hasError = true;
+    }
+
+    if (password.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      hasError = true;
+    }
+
+    if (!agreeTerms) {
+      setTermsError('You must agree to the Terms & Conditions');
+      hasError = true;
+    }
+
+    if (!hasError) {
+      console.log('Sign up success:', { fullName, phoneNumber, email, password, agreeTerms });
+    }
+  };
+
+  const handleFullNameChange = (e) => {
+    const value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+    setFullName(value);
+    setFullNameError('');
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 11);
+    setPhoneNumber(value);
+    setPhoneError('');
   };
 
   return (
     <>
       <Nav />
-      {/* --- Main Content --- */}
+
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 mt-10">
         <div className="max-w-md w-full space-y-8 bg-white">
           
-          {/* Header */}
           <div className="text-center">
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
-              Create Your Account at <span  className='text-green'>RahalCar</span>
+              Create Your Account at <span className="text-green">RahalCar</span>
             </h2>
           </div>
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
             
-            {/* Full Name */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -52,13 +105,13 @@ const SignUp = () => {
                   required
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="Full Name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  value={fullName} 
+                  onChange={handleFullNameChange}
                 />
               </div>
+              {fullNameError && <p className="text-red-500 text-xs mt-1">{fullNameError}</p>}
             </div>
 
-            {/* Phone Number */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -70,15 +123,16 @@ const SignUp = () => {
                   type="tel"
                   autoComplete="tel"
                   required
+                  maxLength="11"
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
-                  placeholder="Phone Number"
+                  placeholder="01012345678"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={handlePhoneChange}
                 />
               </div>
+              {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
             </div>
 
-            {/* Email */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -91,14 +145,17 @@ const SignUp = () => {
                   autoComplete="email"
                   required
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
-                  placeholder="Email / Username"
+                  placeholder="example@gmail.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError('');
+                  }}
                 />
               </div>
+              {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
             </div>
 
-            {/* Password */}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -113,12 +170,15 @@ const SignUp = () => {
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="•••••••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError('');
+                  }}
                 />
               </div>
+              {passwordError && <p className="text-red-500 text-xs mt-1">{passwordError}</p>}
             </div>
 
-            {/* Terms & Conditions */}
             <div className="flex items-start">
               <div className="flex items-center">
                 <input
@@ -127,15 +187,18 @@ const SignUp = () => {
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-green focus:ring-green-500 cursor-pointer mt-1"
                   checked={agreeTerms}
-                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  onChange={(e) => {
+                    setAgreeTerms(e.target.checked);
+                    setTermsError('');
+                  }}
                 />
                 <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-500 cursor-pointer">
                   I agree to the <a href="#" className="font-medium text-black hover:underline">Terms & Conditions</a>
                 </label>
               </div>
             </div>
+            {termsError && <p className="text-red-500 text-xs mt-1">{termsError}</p>}
 
-            {/* Submit Button */}
             <div>
               <button type="submit" 
                 className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -148,7 +211,6 @@ const SignUp = () => {
             </div>
           </form>
 
-          {/* Social Login Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
@@ -158,7 +220,6 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* Social Buttons */}
           <div className="grid grid-cols-4 gap-3">
             <button className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-white transition-colors">
               <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
@@ -172,7 +233,6 @@ const SignUp = () => {
             </button>
           </div>
 
-          {/* Footer Login Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
               Already have an account?{' '}

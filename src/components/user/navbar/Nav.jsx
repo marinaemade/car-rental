@@ -17,11 +17,16 @@ import {
   MoonIcon,
 } from "@heroicons/react/24/outline";
 
+import { useAuth } from "../../../context/AuthContext";
+
 const Nav = () => {
   const [openNav, setOpenNav] = useState(false);
 
-  // 3. استهلاك الـ Context
+
+const {logged}=useAuth();
+
   const { theme, toggleTheme } = useContext(ThemeContext);
+
 
   useEffect(() => {
     const handleResize = () => {

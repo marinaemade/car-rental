@@ -1,44 +1,70 @@
-// Login
-import React, { useState } from "react";
-// Heroicons for UI icons
-import {
-  UserIcon,
-  LockClosedIcon,
-  ArrowRightIcon,
-} from "@heroicons/react/24/outline";
-// React Icons for Brand icons (Facebook, Apple)
-import { FaFacebookF, FaApple } from "react-icons/fa";
-// Using it to gro to sign up page if the user doesn't have an account
-import { Link } from "react-router-dom";
-import Footer from "../../../components/common/Footer/Footer";
-import Nav from "../../../components/user/navbar/Nav";
-
-// Define the exact green color from the design
+import React, { useState } from 'react';
+import { UserIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import { FaFacebookF, FaApple } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from "../../../context/AuthContext";
+import Nav from '../../../components/user/navbar/Nav';
+import Footer from '../../../components/common/Footer/Footer';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailError("");
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setPasswordError("");
+  };
+
+  const submitLogin = (e) => { 
     e.preventDefault();
-    console.log("Login attempt:", { email, password, rememberMe });
+
+    setEmailError("");
+    setPasswordError("");
+
+    let hasError = false;
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!emailRegex.test(email.trim())) {
+      setEmailError('Email must end with @gmail.com');
+      hasError = true;
+    }
+
+    if (password.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      hasError = true;
+    }
+
+    if (!hasError) {
+      console.log("Login success:", { email, password, rememberMe });
+    }
   };
 
   return (
     <>
       <Nav />
 
-      {/* --- Main Content --- */}
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 mt-10">
         <div className="max-w-md w-full space-y-8 bg-white">
+          
           <div className="text-center">
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
               Welcome Back to <span className="text-green">RahalCar</span>
             </h2>
           </div>
 
-          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-5" onSubmit={submitLogin}>
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -51,11 +77,12 @@ const Login = () => {
                   autoComplete="email"
                   required
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
-                  placeholder="Email / Username"
+                  placeholder="example@gmail.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
                 />
               </div>
+              {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
             </div>
 
             <div>
@@ -72,12 +99,12 @@ const Login = () => {
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="•••••••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                 />
               </div>
+              {passwordError && <p className="text-red-500 text-xs mt-1">{passwordError}</p>}
             </div>
 
-            {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -85,7 +112,7 @@ const Login = () => {
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer"
-                  style={{ accentColor: "#16a34a" }} // ← غيرتي اللون هنا
+                  style={{ accentColor: "#16a34a" }}
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
@@ -106,7 +133,6 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Submit Button */}
             <div>
               <button
                 type="submit"
@@ -120,7 +146,6 @@ const Login = () => {
             </div>
           </form>
 
-          {/* Social Login Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
@@ -132,7 +157,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Social Buttons */}
           <div className="grid grid-cols-4 gap-3">
             <button className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-white transition-colors">
               <img
@@ -140,7 +164,7 @@ const Login = () => {
                 alt="Google"
                 className="w-5 h-5"
               />
-              Sign up with Google
+              Sign in with Google
             </button>
             <button className="col-span-1 flex items-center justify-center py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-gray-50 transition-colors">
               <FaFacebookF className="w-5 h-5" />
@@ -150,10 +174,9 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Footer Register Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
-              Don't have an account?{" "}
+              Don't have an account?{' '}
               <Link
                 to="/register"
                 className="font-semibold text-black hover:underline"
