@@ -12,8 +12,10 @@ import Cart from "../pages/user/Cart/Cart";
 import Reservation from "../pages/user/reservation/Reservation";
 import PaymentDetails from "../pages/user/reservation/PaymentDetails";
 import Checkout from "../pages/user/checkout/Checkout";
-import User from "../pages/user/userPage/User";
 import ThemeProvider from "../context/ThemeContext";
+import BookingsTab from './../pages/user/userPage/BookingsTab';
+import ProfileTab from './../pages/user/userPage/ProfileTab';
+
 const UserLayout = () => {
   return (
     <ThemeProvider> 
@@ -24,7 +26,8 @@ const UserLayout = () => {
         <main className="flex-grow">
           <Routes>
             <Route index element={<Home />} />
-            <Route path="user" element={<User />} />
+            <Route path="user-profile" element={<ProfileTab />} />
+            <Route path="user-bookings" element={<BookingsTab />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
             <Route path="cars" element={<Cars />} />
