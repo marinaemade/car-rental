@@ -1,59 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 // Heroicons for UI icons
-import { UserIcon, LockClosedIcon, ArrowRightIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import {
+  UserIcon,
+  LockClosedIcon,
+  ArrowRightIcon,
+  PhoneIcon,
+} from "@heroicons/react/24/outline";
 // React Icons for Brand icons (Facebook, Apple)
-import { FaFacebookF, FaApple } from 'react-icons/fa';
+import { FaFacebookF, FaApple } from "react-icons/fa";
 // Using it to go to login page if the user already has an account
-import { Link } from 'react-router-dom';
-import Nav from '../../../components/user/navbar/Nav';
-import Footer from '../../../components/common/Footer/Footer';
+import { Link } from "react-router-dom";
+import Nav from "../../../components/user/navbar/Nav";
+import Footer from "../../../components/common/Footer/Footer";
 
 // Define the exact green color from the design
-const BRAND_COLOR = '#64ff4f'; 
+const BRAND_COLOR = "#64ff4f";
 
 const SignUp = () => {
-  const [fullName, setFullName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
 
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [phoneError, setPhoneError] = useState('');
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [agreeTermsError, setAgreeTermsError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-  setEmailError('');
-  setPasswordError('');
-  setPhoneError('');
 
-  //email validation
+    setEmailError("");
+    setPasswordError("");
+    setPhoneError("");
+    setAgreeTermsError("");
+
+    //email validation
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     if (!emailRegex.test(email)) {
-      setEmailError('Please enter a valid Gmail address (e.g., user@gmail.com)');
+      setEmailError(
+        "Please enter a valid Gmail address (e.g., user@gmail.com)",
+      );
       return;
     }
 
     //phone validation
-      const phoneRegex = /^01[0125]\d{8}$/;
-      if (!phoneRegex.test(phoneNumber)) {
-      setPhoneError('Please enter a valid Egyptian phone number');
+    const phoneRegex = /^01[0125]\d{8}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError("Please enter a valid Egyptian phone number");
       return;
-  }
-
+    }
 
     //password validation
     if (password.length < 8) {
-      setPasswordError('Password must be at least 8 characters');
-      return; 
+      setPasswordError("Password must be at least 8 characters");
+      return;
     }
 
-    console.log('Sign up attempt:', { fullName, phoneNumber, email, password, agreeTerms });
-  };
+    //Terms and conditions validation
+    if (!agreeTerms) {
+      setAgreeTermsError("You must agree to the Terms & Conditions.");
+      return;
+    }
 
-    
+    console.log("Sign up attempt:", {
+      fullName,
+      phoneNumber,
+      email,
+      password,
+      agreeTerms,
+    });
+  };
 
   return (
     <>
@@ -61,16 +79,15 @@ const SignUp = () => {
       {/* --- Main Content --- */}
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 mt-10">
         <div className="max-w-md w-full space-y-8 bg-white">
-          
           {/* Header */}
           <div className="text-center">
             <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
-              Create Your Account at <span  className='text-green'>RahalCar</span>
+              Create Your Account at{" "}
+              <span className="text-green">RahalCar</span>
             </h2>
           </div>
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
-            
             {/* Full Name */}
             <div>
               <div className="relative">
@@ -104,44 +121,45 @@ const SignUp = () => {
                   autoComplete="tel"
                   required
                   className={`appearance-none block w-full pl-12 pr-3 py-4 border rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm ${
-                    phoneError ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50 focus:border-green-500'
+                    phoneError
+                      ? "border-red-500 bg-red-50"
+                      : "border-gray-200 bg-gray-50 focus:border-green-500"
                   }`}
                   placeholder="01XXXXXXXXX"
                   value={phoneNumber}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, '');
-                    if (value === '') {
-                    setPhoneNumber(value);
-                    setPhoneError('');
-                    return;
+                    const value = e.target.value.replace(/\D/g, "");
+                    if (value === "") {
+                      setPhoneNumber(value);
+                      setPhoneError("");
+                      return;
                     }
 
                     if (value.length < 3) {
-                    setPhoneNumber(value);
-                    setPhoneError('');
-                    return;
-                  }
-        
+                      setPhoneNumber(value);
+                      setPhoneError("");
+                      return;
+                    }
 
-                    const validPrefixes = ['010', '011', '012', '015'];
+                    const validPrefixes = ["010", "011", "012", "015"];
                     const prefix = value.substring(0, 3);
                     if (validPrefixes.includes(prefix)) {
-          
-                    if (value.length <= 11) {
-                      setPhoneNumber(value);
-                      setPhoneError('');
+                      if (value.length <= 11) {
+                        setPhoneNumber(value);
+                        setPhoneError("");
+                      }
+                    } else {
+                      setPhoneError(
+                        "Phone must start with 010, 011, 012, or 015",
+                      );
                     }
-                  }
-
-                  else {
-                    setPhoneError('Phone must start with 010, 011, 012, or 015');
-                  
-                  }}}
-
+                  }}
                   maxLength={11}
                 />
               </div>
-              {phoneError && <p className="text-red-500 text-xs mt-1 pl-2">{phoneError}</p>}
+              {phoneError && (
+                <p className="text-red-500 text-xs mt-1 pl-2">{phoneError}</p>
+              )}
             </div>
 
             {/* Email */}
@@ -160,12 +178,14 @@ const SignUp = () => {
                   placeholder="Email / Username"
                   value={email}
                   onChange={(e) => {
-                    setEmail(e.target.value)
-                    setEmailError('');}
-                  }
+                    setEmail(e.target.value);
+                    setEmailError("");
+                  }}
                 />
               </div>
-              {emailError && <p className="text-red-500 text-xs mt-1 pl-2">{emailError}</p>}
+              {emailError && (
+                <p className="text-red-500 text-xs mt-1 pl-2">{emailError}</p>
+              )}
             </div>
 
             {/* Password */}
@@ -181,40 +201,66 @@ const SignUp = () => {
                   autoComplete="new-password"
                   required
                   className={`appearance-none block w-full pl-12 pr-3 py-4 border rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm ${
-                    passwordError ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50 focus:border-green-500'
+                    passwordError
+                      ? "border-red-500 bg-red-50"
+                      : "border-gray-200 bg-gray-50 focus:border-green-500"
                   }`}
                   placeholder="•••••••••••••"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
-                    setPasswordError('');
+                    setPasswordError("");
                   }}
                 />
               </div>
-              {passwordError && <p className="text-red-500 text-xs mt-1 pl-2">{passwordError}</p>}
+              {passwordError && (
+                <p className="text-red-500 text-xs mt-1 pl-2">
+                  {passwordError}
+                </p>
+              )}
             </div>
 
             {/* Terms & Conditions */}
             <div className="flex items-start">
-              <div className="flex items-center">
-                <input
-                  id="agree-terms"
-                  name="agree-terms"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer mt-1"
-                  style={{ accentColor: BRAND_COLOR }}
-                  checked={agreeTerms}
-                  onChange={(e) => setAgreeTerms(e.target.checked)}
-                />
-                <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-500 cursor-pointer">
-                  I agree to the <a href="#" className="font-medium text-black hover:underline">Terms & Conditions</a>
-                </label>
+              <div>
+                <div className="flex items-center">
+                  <input
+                    id="agree-terms"
+                    name="agree-terms"
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer mt-1"
+                    style={{ accentColor: BRAND_COLOR }}
+                    checked={agreeTerms}
+                    onChange={(e) => {
+                      setAgreeTerms(e.target.checked);
+                      setAgreeTermsError("");
+                    }}
+                  />
+                  <label
+                    htmlFor="agree-terms"
+                    className="ml-2 block text-sm text-gray-500 cursor-pointer"
+                  >
+                    I agree to the{" "}
+                    <a
+                      href="#"
+                      className="font-medium text-black hover:underline"
+                    >
+                      Terms & Conditions
+                    </a>
+                  </label>
+                </div>
+                {agreeTermsError && (
+                  <p className="text-red-500 text-xs mt-1 pl-2">
+                    {agreeTermsError}
+                  </p>
+                )}
               </div>
             </div>
 
             {/* Submit Button */}
             <div>
-              <button type="submit" 
+              <button
+                type="submit"
                 className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
               >
                 <span className="flex items-center gap-2">
@@ -231,14 +277,20 @@ const SignUp = () => {
               <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or sign up with your social account</span>
+              <span className="px-2 bg-white text-gray-500">
+                Or sign up with your social account
+              </span>
             </div>
           </div>
 
           {/* Social Buttons */}
           <div className="grid grid-cols-4 gap-3">
             <button className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-white transition-colors">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
               Sign up with Google
             </button>
             <button className="col-span-1 flex items-center justify-center py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-gray-50 transition-colors">
@@ -252,8 +304,8 @@ const SignUp = () => {
           {/* Footer Login Link */}
           <div className="text-center mt-8">
             <p className="text-sm text-gray-500">
-              Already have an account?{' '}
-              <Link 
+              Already have an account?{" "}
+              <Link
                 to="/login"
                 className="font-semibold text-black hover:underline"
               >

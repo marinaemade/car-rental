@@ -15,34 +15,39 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const {login} = useAuth()
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const { login } = useAuth()
   const navigate = useNavigate()
 
   //when the user clicks on submit button
-  const submitLogin = async() => { 
-    if (false){
+  const submitLogin = (e) => { 
+    e.preventDefault();
+
+    setEmailError("");
+    setPasswordError("");
+
+    // email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+    if (!emailRegex.test(email.trim())) {
+      setEmailError("Please enter a valid Gmail address");
+      return;
     }
-    else{
-      //try..catch for fetch.then 
-      {/*try{
-        const req = await fetch( ,{
-          method: "post",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringfy(email,pass),
-      });
-      const {accessToken} = await req.json();
-      login(accessToken);
-        navigate("/pages/user/home") //navigate to home
-      }
-      catch(e) {
-      } */}
-      //data
-      const data = jwtDecode({/*"token"*/});
-      console.log(data);
+
+    // password validation
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+      return;
     }
+
+    // fake decode (placeholder)
+    // const data = jwtDecode(token);
+    // console.log(data);
+
+    console.log("Login success:", { email, password, rememberMe });
   };
-
-
 
   return (
     <>
@@ -60,8 +65,13 @@ const Login = () => {
             </h2>
           </div>
 
-          <form className="mt-8 space-y-5" onSubmit={submitLogin}>
-            
+          <form
+            className="mt-8 space-y-5"
+            onSubmit={submitLogin}
+            noValidate
+          >
+                      
+            {/*email*/}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -70,17 +80,34 @@ const Login = () => {
                 <input
                   id="email-address"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   required
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="Email / Username"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError("");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
+                      if (!emailRegex.test(email)) {
+                        
+                        setEmailError("Please enter a valid Gmail address.");
+                      }
+                    }
+                  }}
+                                
+                      />
+                    </div>
+                    {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
+                  </div>
+
+            
+            {/*password*/}
             <div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
@@ -95,83 +122,41 @@ const Login = () => {
                   className="appearance-none block w-full pl-12 pr-3 py-4 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-green-500 sm:text-sm bg-gray-50"
                   placeholder="•••••••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError("");
+                  }}
                 />
               </div>
+              {passwordError && <p className="text-red-500 text-xs mt-1">{passwordError}</p>}
             </div>
 
-            {/* Remember Me & Forgot Password */}
+            {/* Remember Me */}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
                   id="remember-me"
-                  name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer"
-                  style={{ accentColor: '#16a34a' }} // ← غيرتي اللون هنا
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-green-600"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-500 cursor-pointer">
+                <label className="ml-2 text-sm text-gray-500">
                   Remember me
                 </label>
-              </div>
-              <div className="text-sm">
-                <a href="#" className="font-medium hover:underline text-gray-500">
-                  Forgot password?
-                </a>
               </div>
             </div>
 
             {/* Submit Button */}
-            <div>
-              <button type="submit" 
-                className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-black bg-[#22c55e] hover:opacity-90 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
-              >
-                <span className="flex items-center gap-2">
-                  Sign in
-                  <ArrowRightIcon className="w-4 h-4" />
-                </span>
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="w-full flex justify-center py-4 text-sm font-bold rounded-xl text-black bg-[#22c55e]"
+            >
+              Sign in
+              <ArrowRightIcon className="w-4 h-4 ml-2" />
+            </button>
           </form>
 
-          {/* Social Login Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or connect with your social account</span>
-            </div>
-          </div>
-
-          {/* Social Buttons */}
-          <div className="grid grid-cols-4 gap-3">
-            <button className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-gray-50 hover:bg-white transition-colors">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-              Sign up with Google
-            </button>
-            <button className="col-span-1 flex items-center justify-center py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-gray-50 transition-colors">
-              <FaFacebookF className="w-5 h-5" />
-            </button>
-            <button className="col-span-1 flex items-center justify-center py-3 px-4 border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-black bg-white hover:bg-gray-50 transition-colors">
-              <FaApple className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Footer Register Link */}
-          <div className="text-center mt-8">
-            <p className="text-sm text-gray-500">
-              Don't have an account?{' '}
-              <Link 
-                to="/register"
-                className="font-semibold text-black hover:underline"
-              >
-                Register Here!
-              </Link>
-            </p>
-          </div>
         </div>
       </main>
     </>
