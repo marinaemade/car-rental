@@ -1,3 +1,4 @@
+// NotFound
 import React from 'react';
 import { Typography, Button } from "@material-tailwind/react";
 import { Link } from 'react-router-dom';
