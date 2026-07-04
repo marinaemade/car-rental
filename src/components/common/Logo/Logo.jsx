@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { TruckIcon } from "@heroicons/react/24/outline";
 
+
 const Logo = ({ to = "/", className = "" }) => {
   return (
     <Link
@@ -9,7 +10,7 @@ const Logo = ({ to = "/", className = "" }) => {
       className={`flex items-center gap-2 text-white font-bold text-lg group ${className}`}
     >
       <TruckIcon className="h-6 w-6 text-green transition-transform group-hover:rotate-12" />
-      <span className="transition-colors group-hover:text-grayLight">
+      <span className="transition-colors group-hover:text-grayLight text-dark dark:text-white">
         Rahal<span className="text-green">Car</span>
       </span>
     </Link>
