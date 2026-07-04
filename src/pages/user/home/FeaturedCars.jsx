@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { Typography, Button, Card, CardHeader, CardBody, CardFooter } from "@material-tailwind/react";
@@ -9,11 +9,24 @@ import {
   Cog8ToothIcon, 
   BeakerIcon 
 } from "@heroicons/react/24/solid";
+import { ThemeContext } from './../../../context/ThemeContext';
 
 const FeaturedCars = ({car}) => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext);
+  const isDarkMode = theme === "dark";
+
+  // Dynamic Theme Styling Classes based on your palette
+  const bgClass = isDarkMode ? "bg-black" : "bg-white";
+  const cardBgClass = isDarkMode ? "bg-dark" : "bg-grayLight bg-opacity-30";
+  const techBoxBgClass = isDarkMode ? "bg-softBlack" : "bg-white";
+  const borderClass = isDarkMode ? "border-lightDark" : "border-grayLight";
+  const textTitleClass = isDarkMode ? "text-white" : "text-black";
+  const textMutedClass = isDarkMode ? "text-gray" : "text-lightDark";
+  const priceBadgeBg = isDarkMode ? "bg-black/80" : "bg-white/90";
+
   useEffect(() => {
     // Fetch data from the data.json file
     const fetchCars = async () => {
@@ -33,22 +46,22 @@ const FeaturedCars = ({car}) => {
 
   if (loading) {
     return (
-      <section className="bg-black py-20 px-8 flex justify-center items-center">
+      <section className={`${bgClass} py-20 px-8 flex justify-center items-center transition-colors duration-300`}>
         <Typography className="text-green text-xl font-bold animate-pulse">Loading Fleet...</Typography>
       </section>
     );
   }
   return (
-    <section className="bg-black py-20 px-8">
+    <section className={`${bgClass} py-20 px-8 transition-colors duration-300`}>
       <div className="mx-auto max-w-7xl">
         
         {/* Header Section */}
         <div className="mb-12 flex flex-col items-center text-center">
-          <Typography variant="h2" className="text-white text-4xl font-bold mb-2">
+          <Typography variant="h2" className={`${textTitleClass} text-4xl font-bold mb-2`}>
             Featured <span className="text-green">Cars</span>
           </Typography>
 
-          <Typography className="text-gray max-w-md font-normal">
+          <Typography className={`${textMutedClass} max-w-md font-normal`}>
             Explore our world-class collection of premium cars available for your next journey.
           </Typography>
         </div>
@@ -56,14 +69,14 @@ const FeaturedCars = ({car}) => {
         {/* Grid Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cars.map(({image,price,category,rating,model,id,brand,reviews,transmission,location, year, fuelType, seats}) => (
-            <Card key={id} className="bg-dark border border-lightDark overflow-hidden group">
+            <Card key={id} className={`${cardBgClass} border ${borderClass} overflow-hidden group shadow-none`}>
               <CardHeader className="relative m-0 rounded-none h-48">
                 <img src={image} alt={model} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 
                 {/* Price Badge */}
-                <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-lg border border-green/30">
+                <div className={`${priceBadgeBg} backdrop-blur-md px-3 py-1 rounded-lg border ${borderClass}`}>
                   <Typography className="text-green font-bold text-sm">
-                    ${price}<span className="text-grayLight text-xs font-normal">/day</span>
+                    ${price}<span className={`${textMutedClass} text-xs font-normal`}>/day</span>
                   </Typography>
                 </div>
 
@@ -78,38 +91,38 @@ const FeaturedCars = ({car}) => {
               <CardBody className="p-5">
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <Typography className="text-gray text-[10px] font-bold uppercase tracking-tighter">
+                    <Typography className={`${textMutedClass} text-[10px] font-bold uppercase tracking-tighter`}>
                       {brand}
                     </Typography>
-                    <Typography className="text-white font-bold text-lg leading-tight">
+                    <Typography className={`${textTitleClass} font-bold text-lg leading-tight`}>
                       {model}
                     </Typography>
                   </div>
                   <div className="flex items-center gap-1">
                     <StarIcon className="h-4 w-4 text-yellow-500" />
-                    <Typography className="text-white text-xs font-bold">{rating}</Typography>
-                    <Typography className="text-gray text-[10px]">({reviews})</Typography>
+                    <Typography className={`${textTitleClass} text-xs font-bold`}>{rating}</Typography>
+                    <Typography className={`${textMutedClass} text-[10px]`}>({reviews})</Typography>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 text-gray mb-4">
+                <div className={`flex items-center gap-1 ${textMutedClass} mb-4`}>
                   <MapPinIcon className="h-3 w-3" />
                   <Typography className="text-[11px]">{location} • {year}</Typography>
                 </div>
 
                 {/* Tech Specs */}
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-softBlack p-2 rounded-md flex flex-col items-center justify-center border border-lightDark">
-                    <BeakerIcon className="h-3 w-3 text-gray mb-1" />
-                    <Typography className="text-[9px] text-grayLight uppercase">{fuelType}</Typography>
+                  <div className={`${techBoxBgClass} p-2 rounded-md flex flex-col items-center justify-center border ${borderClass}`}>
+                    <BeakerIcon className={`h-3 w-3 ${textMutedClass} mb-1`} />
+                    <Typography className={`text-[9px] ${textMutedClass} uppercase`}>{fuelType}</Typography>
                   </div>
-                  <div className="bg-softBlack p-2 rounded-md flex flex-col items-center justify-center border border-lightDark">
-                    <Cog8ToothIcon className="h-3 w-3 text-gray mb-1" />
-                    <Typography className="text-[9px] text-grayLight uppercase">{transmission}</Typography>
+                  <div className={`${techBoxBgClass} p-2 rounded-md flex flex-col items-center justify-center border ${borderClass}`}>
+                    <Cog8ToothIcon className={`h-3 w-3 ${textMutedClass} mb-1`} />
+                    <Typography className={`text-[9px] ${textMutedClass} uppercase`}>{transmission}</Typography>
                   </div>
-                  <div className="bg-softBlack p-2 rounded-md flex flex-col items-center justify-center border border-lightDark">
-                    <UsersIcon className="h-3 w-3 text-gray mb-1" />
-                    <Typography className="text-[9px] text-grayLight uppercase">{seats} Seats</Typography>
+                  <div className={`${techBoxBgClass} p-2 rounded-md flex flex-col items-center justify-center border ${borderClass}`}>
+                    <UsersIcon className={`h-3 w-3 ${textMutedClass} mb-1`} />
+                    <Typography className={`text-[9px] ${textMutedClass} uppercase`}>{seats} Seats</Typography>
                   </div>
                 </div>
               </CardBody>
