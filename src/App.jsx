@@ -18,6 +18,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
 
+
         {/* User Routes */}
         <Route path="/*" element={<UserLayout />} />
 
@@ -28,6 +29,8 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Auth>
+
+
   );
 };
 
