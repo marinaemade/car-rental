@@ -18,12 +18,12 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { useAuth } from "../../../context/AuthContext";
+import IconProfile from './../IconProfile';
 
 const Nav = () => {
   const [openNav, setOpenNav] = useState(false);
 
-
-const {logged}=useAuth();
+  const {logged}=useAuth();
 
   const { theme, toggleTheme } = useContext(ThemeContext);
 
@@ -106,14 +106,18 @@ const {logged}=useAuth();
             )}
           </IconButton>
 
-          <Link to="/login">
-            <IconButton
-              variant="text"
-              className="text-black dark:text-white hover:text-green dark:hover:text-softGreen hover:bg-green/10 dark:hover:bg-lightDark transition-all duration-300"
-            >
-              <UserIcon className="h-6 w-6" />
-            </IconButton>
-          </Link>
+          {logged ? (
+            <IconProfile />
+          ) : (
+            <Link to="/login">
+              <IconButton
+                variant="text"
+                className="text-black dark:text-white hover:text-green dark:hover:text-softGreen hover:bg-green/10 dark:hover:bg-lightDark transition-all duration-300"
+              >
+                <UserIcon className="h-6 w-6" />
+              </IconButton>
+            </Link>
+          )}
 
           {/* Toggle Button for Mobile */}
           <IconButton
