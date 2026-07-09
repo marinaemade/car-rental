@@ -4,8 +4,11 @@ import { FaFacebookF, FaApple } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Nav from '../../../components/user/navbar/Nav';
 import Footer from '../../../components/common/Footer/Footer';
+import api from "../../../api/api";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
@@ -18,7 +21,7 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState('');
   const [termsError, setTermsError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setFullNameError('');
@@ -61,8 +64,29 @@ const SignUp = () => {
     }
 
     if (!hasError) {
-      console.log('Sign up success:', { fullName, phoneNumber, email, password, agreeTerms });
-    }
+
+  try {
+
+    const response = await api.post("/users/register", {
+      name: fullName,
+      phone: phoneNumber,
+      email: email,
+      password: password
+    });
+
+
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("user", JSON.stringify(response.data.user));
+    navigate("/profile");
+
+
+  } catch(error) {
+
+    console.log(error.response?.data || error.message);
+
+  }
+
+}
   };
 
   const handleFullNameChange = (e) => {

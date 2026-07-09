@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../context/AuthContext";
 import Nav from '../../../components/user/navbar/Nav';
 import Footer from '../../../components/common/Footer/Footer';
+import api from "../../../api/api";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ const Login = () => {
     setPasswordError("");
   };
 
-  const submitLogin = (e) => { 
+  const submitLogin = async  (e) => { 
     e.preventDefault();
 
     setEmailError("");
@@ -47,9 +48,29 @@ const Login = () => {
     }
 
     if (!hasError) {
-      console.log("Login success:", { email, password, rememberMe });
+    try { 
+        const response = await api.post("/users/login", {
+          email,
+          password,
+        });
+
+
+        localStorage.setItem("token", response.data.token);
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(response.data.user)
+        );
+
+
+        navigate("/profile");
+
+
+      } catch (error) {
+        console.log(error.response?.data || error.message);
+      }
     }
-  };
+    };
 
   return (
     <>
