@@ -8,6 +8,7 @@ import Login from "./pages/auth/login/Login";
 import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
 import { Auth  } from "./context/AuthContext";
+import User from "./pages/user/userPage/User";
 
 const App = () => {
 
@@ -21,7 +22,7 @@ const App = () => {
 
         {/* User Routes */}
         <Route path="/*" element={<UserLayout />} />
-
+        
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminLayout />} />
 

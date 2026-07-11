@@ -5,8 +5,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import Nav from '../../../components/user/navbar/Nav';
 import Footer from '../../../components/common/Footer/Footer';
 import { ThemeContext } from './../../../context/ThemeContext';
+import api from "../../../api/api"; 
+import { useAuth } from "../../../context/AuthContext";
 
 const SignUp = () => {
+  const { login } = useAuth();
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
@@ -23,9 +26,11 @@ const SignUp = () => {
   const { theme } = useContext(ThemeContext);
   const isDarkMode = theme === "dark";
 
-  const handleSubmit = (e) => {
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Clear previous errors
     setFullNameError('');
     setPhoneError('');
     setEmailError('');
@@ -34,6 +39,7 @@ const SignUp = () => {
 
     let hasError = false;
 
+    // Validate full name
     const nameRegex = /^[a-zA-Z\s]+$/;
     if (!fullName.trim()) {
       setFullNameError('Full name is required.');
@@ -43,40 +49,76 @@ const SignUp = () => {
       hasError = true;
     }
 
+    // Validate phone number
     const phoneRegex = /^01[0125][0-9]{8}$/;
     if (!phoneRegex.test(phoneNumber)) {
       setPhoneError('Phone number must be exactly 11 digits and start with 010, 011, 012, or 015.');
       hasError = true;
     }
 
+    // Validate email format
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     if (!emailRegex.test(email.trim())) {
       setEmailError('Please enter a valid Gmail address (e.g., user@gmail.com).');
       hasError = true;
     }
 
+    // Validate password length
     if (password.length < 8) {
       setPasswordError('Password must be at least 8 characters.');
       hasError = true;
     }
 
+    // Validate terms agreement
     if (!agreeTerms) {
       setTermsError('You must agree to the Terms & Conditions.');
       hasError = true;
     }
 
+    // If no validation errors, send request to backend
     if (!hasError) {
-      console.log('Sign up success:', { fullName, phoneNumber, email, password, agreeTerms });
-      navigate("/login");
+      try {
+        const response = await api.post("/users/register", {
+          name: fullName,
+          email,
+          password,
+          phone: phoneNumber,
+          address: "",
+        });
+
+        console.log("Register Success:", response.data);
+
+        // Redirect to login page after successful registration
+        navigate("/login");
+      } catch (error) {
+        console.log("Register Error:", error.response?.data || error.message);
+        
+        // Handle specific error responses from backend
+        if (error.response?.status === 409) {
+          if (error.response.data?.fields?.includes('email')) {
+            setEmailError('This email is already registered. Please login instead.');
+          } else if (error.response.data?.fields?.includes('phone')) {
+            setPhoneError('This phone number is already registered.');
+          } else {
+            setEmailError('This email or phone is already registered.');
+          }
+        } else if (error.response?.status === 500) {
+          setEmailError('Server error. Please try again later.');
+        } else {
+          alert(error.response?.data?.message || "Registration failed");
+        }
+      }
     }
   };
 
+  // Handle full name input (allow only letters and spaces)
   const handleFullNameChange = (e) => {
     const value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
     setFullName(value);
     if (fullNameError) setFullNameError('');
   };
 
+  // Handle phone number input (allow only digits, max 11)
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 11);
     setPhoneNumber(value);
@@ -284,10 +326,7 @@ const SignUp = () => {
           <div className="text-center mt-8">
             <p className={`text-sm ${textNormal}`}>
               Already have an account?{' '}
-              <Link 
-                to="/login"
-                className={`font-semibold hover:underline ${textLink}`}
-              >
+              <Link to="/login" className={`font-semibold hover:underline ${textLink}`}>
                 Sign in Here!
               </Link>
             </p>
