@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { PiCardholder } from "react-icons/pi";
+import api from "../../../api/api";
+import { useNavigate } from "react-router-dom";
 
 const PaymentDetails = () => {
+  const navigate = useNavigate();
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
@@ -39,6 +42,40 @@ const PaymentDetails = () => {
     value = value.slice(0, 4);
     setCvv(value);
   };
+
+  const handlePayment = async () => {
+
+  try {
+
+    const bookingData = {
+      carId: "CAR_ID",
+      carName: "BMW",
+      startDate: "2026-04-12",
+      endDate: "2026-04-17",
+      totalPrice: 850,
+      paymentMethod: "Visa"
+    };
+
+
+    const response = await api.post(
+      "/bookings",
+      bookingData
+    );
+
+
+    console.log(response.data);
+
+
+    navigate("/profile");
+
+
+  } catch(error){
+
+    console.log(error.response?.data || error.message);
+
+  }
+
+};
 
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center p-4 pt-20">
@@ -95,8 +132,11 @@ const PaymentDetails = () => {
 
         </div>
 
-        <button className="mt-6 w-full bg-[#22c55e] text-white py-3 rounded-lg font-semibold hover:bg-[#4ade80] transition-all">
-          Pay Now
+        <button
+        onClick={handlePayment}
+        className="mt-6 w-full bg-[#22c55e] text-white py-3 rounded-lg font-semibold hover:bg-[#4ade80]"
+        >
+        Pay Now
         </button>
         
         <p className="text-center text-sm text-gray-500 flex items-center justify-center gap-2">

@@ -8,7 +8,11 @@ import Login from "./pages/auth/login/Login";
 import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
 import { Auth  } from "./context/AuthContext";
+<<<<<<< HEAD
 import { BookingProvider } from "./context/BookingContext";
+=======
+import User from "./pages/user/userPage/User";
+>>>>>>> 98c6f6f22b31a9c4f35de379d070c826f2ebd5f4
 
 const App = () => {
 
@@ -23,7 +27,7 @@ const App = () => {
 
         {/* User Routes */}
         <Route path="/*" element={<UserLayout />} />
-
+        
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminLayout />} />
 
