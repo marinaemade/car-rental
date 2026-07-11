@@ -8,11 +8,13 @@ import Login from "./pages/auth/login/Login";
 import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
 import { Auth  } from "./context/AuthContext";
+import { BookingProvider } from "./context/BookingContext";
 
 const App = () => {
 
   return (
      <Auth>
+       <BookingProvider>
       <Routes>
         {/* Auth Routes (no layout) */}
         <Route path="/login" element={<Login />} />
@@ -28,7 +30,8 @@ const App = () => {
         {/* Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </Auth>
+    </BookingProvider>
+      </Auth>
 
 
   );
