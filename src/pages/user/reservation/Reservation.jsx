@@ -1,21 +1,41 @@
 import React, { useState } from "react";
+import { useBooking } from "../../../context/BookingContext";
 import { FaCar, FaUser, FaMoneyBill, FaShieldAlt } from "react-icons/fa";
 import { FaCcVisa, FaMoneyBillWave } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function CarBooking() {
   const [openStep, setOpenStep] = useState(1);
-  // const [paymentMethod, setPaymentMethod] = useState(""); // ✅ NEW
+  const [bookingData, setBookingData] =
+  useState({
+    pickupDate: "",
+  returnDate: "",
+  pickupLocation: "",
+  driverOption: "",
+  driverLanguage: "",
+  specialRequests: "",
+  payment: "",
+  deposit: false,
+  });
 
-  // const navigate = useNavigate(); 
-  
 
 
+  const { selectedCar, setBookingData: saveBookingData } = useBooking();
+  const navigate = useNavigate();
 
   const toggleStep = (step) => {
     setOpenStep(openStep === step ? 0 : step);
   };
 
+const handleConfirmBooking = () => {
+  if (!bookingData.pickupDate || !bookingData.returnDate || !bookingData.pickupLocation) {
+    alert("please fill out this field");
+    return;
+  }
+
+  saveBookingData(bookingData);
+  navigate("/cart");
+};
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100  ">
       {/* Sidebar */}
@@ -59,11 +79,18 @@ export default function CarBooking() {
                   Pickup Date
                 </label>
                 <input
-                  id="Prickup_Date"
-                  name="Prickup_Date"
-                  type="date"
-                  className="border p-2 rounded w-full"
-                />
+                id="Prickup_Date"
+                type="date"
+                value={bookingData.pickupDate || ""}
+                onChange={(e) =>
+                 setBookingData({
+                 ...bookingData,
+                   pickupDate: e.target.value,
+                   })
+                 }
+               className="border p-2 rounded w-full"
+               />
+              
               </div>
 
               <div className="flex flex-col gap-1">
@@ -74,11 +101,17 @@ export default function CarBooking() {
                   Return Date
                 </label>
                 <input
-                  id="return_data"
-                  name="return_data"
-                  type="date"
+                 type="date"
+                  value={bookingData.returnDate || ""}
+                   onChange={(e) =>
+                 setBookingData({
+                 ...bookingData,
+                   returnDate: e.target.value,
+                   })
+                    }
                   className="border p-2 rounded w-full"
-                />
+                  />
+
               </div>
 
               <div className="flex flex-col gap-1 md:col-span-2">
@@ -89,8 +122,15 @@ export default function CarBooking() {
                   Pickup Location
                 </label>
                 <select
-                  id="pickup_location"
-                  name="pickup_location"
+                id="pickup_location"
+                 value={bookingData.pickupLocation || ""}
+                  onChange={(e) =>
+                 setBookingData({
+                 ...bookingData,
+                  pickupLocation: e.target.value,
+                   })
+                    }
+                  
                   className="border p-2 rounded w-full"
                 >
                   <option>Select Location</option>
@@ -125,6 +165,14 @@ export default function CarBooking() {
                       id="radio1"
                       name="driver_option"
                       type="radio"
+                      value="car only"
+                      checked={bookingData.driverOption === "car only"}
+                      onChange={(e) =>
+                        setBookingData({
+                          ...bookingData,
+                          driverOption: e.target.value,
+                        })
+                      }
                       className="w-4 h-4 accent-[#22c55e]"
                     />
                   </label>
@@ -132,17 +180,26 @@ export default function CarBooking() {
                   <label className="flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition">
                     <span className="text-sm font-medium">Car with Driver</span>
                     <input
-                      id="radio2"
+                       id="radio2"
                       name="driver_option"
                       type="radio"
-                      value="driver"
+                      value="car with driver"
+                       checked={bookingData.driverOption === "car with driver"}
+                      onChange={(e) =>
+                        setBookingData({
+                          ...bookingData,
+                          driverOption: e.target.value,
+                          driverLanguage: ""
+                        })
+                      }
                       className="w-4 h-4  accent-[#22c55e]"
                     />
                   </label>
                 </div>
               </div>
 
-              <div className="space-y-2">
+             {bookingData.driverOption === "car with driver" && (
+               <div className="space-y-2">
                 <label
                   htmlFor="drivr_language"
                   className="text-sm font-bold text-gray-700"
@@ -152,7 +209,13 @@ export default function CarBooking() {
 
                 <select
                   id="drivr_language"
-                  name="drivr_language"
+                  value={bookingData.driverLanguage}
+                      onChange={(e) =>
+                        setBookingData({
+                          ...bookingData,
+                          driverLanguage: e.target.value,
+                        })
+                      }
                   className="border p-2 rounded w-full"
                 >
                   <option>Select Language</option>
@@ -160,6 +223,7 @@ export default function CarBooking() {
                   <option>English</option>
                 </select>
               </div>
+              )}
 
               <div className="space-y-2">
                 <label
@@ -171,7 +235,13 @@ export default function CarBooking() {
 
                 <textarea
                   id="spacial_requests"
-                  name="spacial_requests"
+                  value={bookingData.specialRequests}
+                  onChange={(e) =>
+                        setBookingData({
+                          ...bookingData,
+                          specialRequests: e.target.value,
+                        })
+                      }
                   className="w-full border rounded-lg p-3 text-sm min-h-[100px]"
                 ></textarea>
               </div>
@@ -195,6 +265,13 @@ export default function CarBooking() {
                   type="radio"
                   name="payment"
                   value="visa"
+                  checked={bookingData.payment === "visa"}
+                  onChange={(e) =>
+                        setBookingData({
+                          ...bookingData,
+                          payment: e.target.value,
+                        })
+                      }
                   className="hidden"
                 />
                 <FaCcVisa className="text-2xl text-blue-600" />
@@ -206,6 +283,13 @@ export default function CarBooking() {
                   type="radio"
                   name="payment"
                   value="cash"
+                   checked={bookingData.payment === "cash"}
+                  onChange={(e) =>
+                        setBookingData({
+                          ...bookingData,
+                          payment: e.target.value,
+                        })
+                      }
                   className="hidden"
                 />
                 <FaMoneyBillWave className="text-2xl text-green-600" />
@@ -243,7 +327,16 @@ export default function CarBooking() {
               </p>
 
               <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-green-500" />I agree to
+                <input  
+                type="checkbox"
+                 checked={bookingData.deposit}
+                  onChange={(e) =>
+                        setBookingData({
+                          ...bookingData,
+                          deposit: e.target.checked,
+                        })
+                      }
+                 className="accent-green-500" />I agree to
                 pay deposit
               </label>
             </>
@@ -251,62 +344,81 @@ export default function CarBooking() {
         </div>
       </div>
 
-      <div className="w-full md:w-80 p-5 bg-white rounded-xl shadow-lg top-20 pt-20">
-        <div className="flex justify-center mb-6 bg-gray-100 rounded-lg p-2">
-          <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663359518791/TdZsiTJ3qRYeMjwYG3Fbam/bmw-m4-sports-KfEUiVbSxS4MdTKrdXsSg3.webp"
-            alt="car"
-            className="w-48 object-contain"
-          />
-        </div>
+<div className="w-full md:w-80 p-5 bg-white rounded-xl shadow-lg top-20 pt-20">
 
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between">
-            <span className="font-bold">Vehicle:</span>
-            <span className="text-gray-600">BMW </span>
-          </div>
+  <div className="flex justify-center mb-6 bg-gray-100 rounded-lg p-2">
+    <img
+      src={selectedCar?.image}
+      alt={selectedCar?.model}
+      className="w-48 object-contain"
+    />
+  </div>
 
-          <div className="flex justify-between">
-            <span className="font-bold">Rental Days :</span>
-            <span className="text-gray-600 text-right text-sm">
-              5 days, from 2026-04-12 <br /> to 2026-04-17
-            </span>
-          </div>
+  <div className="space-y-3 text-sm">
 
-          <div className="flex justify-between">
-            <span className="font-bold">Pickup Option:</span>
-            <span className="text-gray-600">New York, NY</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="font-bold">Driver Option:</span>
-            <span className="text-gray-600">Self-drive,Without driver</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span className="font-bold">Payment Option:</span>
-            <span className="text-gray-600">Online Payment</span>
-          </div>
-
-          <hr className="my-2" />
-
-          <div className="flex justify-between text-base">
-            <span className="font-bold">Total Price:</span>
-            <span className="font-bold">$850.00</span>
-          </div>
-
-          <div className="flex justify-between text-base">
-            <span className="font-bold">Deposit Amount:</span>
-            <span className="text-gray-600">$1,500.00</span>
-          </div>
-        </div>
-
-        <Link to="/cart">
-          <button className="mt-6 w-full bg-[#22c55e] text-white py-3 rounded-lg font-semibold hover:bg-[#4ade80] transition-all">
-            Confirm Booking
-          </button>
-        </Link>
-      </div>
+    <div className="flex justify-between">
+      <span className="font-bold">Vehicle:</span>
+      <span className="text-gray-600">
+        {selectedCar?.brand} {selectedCar?.model}
+      </span>
     </div>
-  );
-}
+
+    <div className="flex justify-between">
+      <span className="font-bold">Price / Day:</span>
+      <span className="text-gray-600">
+        ${selectedCar?.price}
+      </span>
+    </div>
+
+    <div className="flex justify-between">
+      <span className="font-bold">Category:</span>
+      <span className="text-gray-600">
+        {selectedCar?.category}
+      </span>
+    </div>
+
+    <div className="flex justify-between">
+      <span className="font-bold">Transmission:</span>
+      <span className="text-gray-600">
+        {selectedCar?.transmission}
+      </span>
+    </div>
+
+    <div className="flex justify-between">
+      <span className="font-bold">Fuel:</span>
+      <span className="text-gray-600">
+        {selectedCar?.fuelType}
+      </span>
+    </div>
+
+    <div className="flex justify-between">
+      <span className="font-bold">Seats:</span>
+      <span className="text-gray-600">
+        {selectedCar?.seats}
+      </span>
+    </div>
+
+    <hr className="my-2" />
+
+    <div className="flex justify-between text-base">
+      <span className="font-bold">Total Price:</span>
+      <span className="font-bold">
+        ${selectedCar?.price}
+      </span>
+    </div>
+
+  </div>
+
+  {/* <Link to="/cart"> */}
+    <button 
+     onClick={handleConfirmBooking} 
+    className="mt-6 w-full bg-[#22c55e] text-white py-3 rounded-lg font-semibold hover:bg-[#4ade80] transition-all"
+    >
+      Confirm Booking
+    </button>
+  {/* </Link> */}
+</div>
+</div> 
+  
+);
+  }

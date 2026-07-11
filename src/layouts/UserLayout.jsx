@@ -1,4 +1,3 @@
-// User layout
 import { Route, Routes } from "react-router-dom";
 import Nav from "../components/user/navbar/Nav";
 import Footer from "../components/common/Footer/Footer";
@@ -12,11 +11,8 @@ import Cart from "../pages/user/Cart/Cart";
 import Reservation from "../pages/user/reservation/Reservation";
 import PaymentDetails from "../pages/user/reservation/PaymentDetails";
 import Checkout from "../pages/user/checkout/Checkout";
+// import User from "../pages/user/userPage/User";
 import ThemeProvider from "../context/ThemeContext";
-import BookingsTab from './../pages/user/userPage/BookingsTab';
-import ProfileTab from './../pages/user/userPage/ProfileTab';
-import LoggedUsers from './../context/LoggedUsers';
-
 const UserLayout = () => {
   return (
     <ThemeProvider> 
@@ -27,33 +23,13 @@ const UserLayout = () => {
         <main className="flex-grow">
           <Routes>
             <Route index element={<Home />} />
+            {/* <Route path="user" element={<User />} /> */}
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
-
             <Route path="cars" element={<Cars />} />
             <Route path="cars/:id" element={<CarDetails />} />
-
             <Route path="cart" element={<Cart />} />
             <Route path="reservation" element={<Reservation />} />
-
-            <Route
-              path="user-profile"
-              element={
-                <LoggedUsers>
-                  <ProfileTab />
-                </LoggedUsers>
-              }
-            />
-
-            <Route
-              path="user-bookings"
-              element={
-                <LoggedUsers>
-                  <BookingsTab />
-                </LoggedUsers>
-              }
-            />
-
             <Route path="payment" element={<PaymentDetails />} />
             <Route path="checkout" element={<Checkout />} />
           </Routes>

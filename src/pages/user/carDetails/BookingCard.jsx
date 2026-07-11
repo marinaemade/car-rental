@@ -1,8 +1,10 @@
 import { FaStar, FaPhone } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useBooking } from "../../../context/BookingContext";
 
 export default function BookingCard({ car }) {
   const navigate = useNavigate();
+   const { setSelectedCar } = useBooking();
 
   return (
     <div className="lg:col-span-1">
@@ -22,7 +24,13 @@ export default function BookingCard({ car }) {
 
         <div className="p-6">
           <button
-            onClick={() => car.available && navigate("/reservation")}
+            // onClick={() => car.available && navigate("/reservation")}
+            onClick={() => {
+                   if (car.available) {
+                     setSelectedCar(car);
+                    navigate("/reservation");
+  }
+}}
             className={`w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 ${
               car.available
                 ? "bg-green hover:bg-green text-black cursor-pointer"

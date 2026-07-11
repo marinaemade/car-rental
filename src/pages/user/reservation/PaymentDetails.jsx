@@ -120,7 +120,7 @@ const PaymentDetails = () => {
           </div>
 
           <div className="flex-1">
-            <label className="text-sm font-semibold">CVV</label>
+            <label className="text-sm font-semibold">CVV</label> 
             <input
               type="text"
               value={cvv}
