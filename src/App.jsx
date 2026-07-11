@@ -22,8 +22,7 @@ const App = () => {
 
         {/* User Routes */}
         <Route path="/*" element={<UserLayout />} />
-        <Route path="/profile" element={<User />} />
-
+        
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminLayout />} />
 
