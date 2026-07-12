@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import axios from "axios";
 import { UserIcon, LockClosedIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { FaFacebookF, FaApple } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +6,7 @@ import { useAuth } from "../../../context/AuthContext";
 import Nav from '../../../components/user/navbar/Nav';
 import Footer from '../../../components/common/Footer/Footer';
 import { ThemeContext } from './../../../context/ThemeContext';
+import api from "../../../api/api"; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -21,16 +21,19 @@ const Login = () => {
   const { theme } = useContext(ThemeContext);
   const isDarkMode = theme === "dark";
 
+  // Handle email input change
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     if (emailError) setEmailError("");
   };
 
+  // Handle password input change
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     if (passwordError) setPasswordError("");
   };
 
+  // Handle form submission
   const submitLogin = async (e) => {
   e.preventDefault();
 
@@ -39,43 +42,48 @@ const Login = () => {
 
   let hasError = false;
 
-  //--------------- uncomment this in backend integration--------------------------
-  // Stronger Regex ensuring proper username rules preceding @gmail.com
-  // const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-  // if (!emailRegex.test(email.trim())) {
-  //   setEmailError(
-  //     "Please enter a valid Gmail address (e.g., user@gmail.com)."
-  //   );
-  //   hasError = true;
-  // }
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  if (!emailRegex.test(email.trim())) {
+    setEmailError("Please enter a valid Gmail address (e.g., user@gmail.com).");
+    hasError = true;
+  }
 
   if (password.length < 8) {
     setPasswordError("Password must be at least 8 characters.");
     hasError = true;
   }
 
-  // Stop if validation fails
   if (hasError) return;
 
   try {
-    const req = await axios("https://dummyjson.com/user/login", {
-      method: "post",
-      data: {
-        // DummyJSON expects username, not email
-        username: email,
-        password,
-      },
+    const response = await api.post("/users/login", {
+      email,
+      password,
     });
 
-    const { accessToken } = req.data;
+    console.log("Login Success:", response.data);
+    localStorage.setItem("token", response.data.token);
+  
+    login(response.data.token);
 
-    login(accessToken);
+    // Redirect to home page
+    navigate("/");
+  } catch (error) {
+    console.error("Login Error:", error);
 
-    console.log("Login success:", { email, password, rememberMe });
-
-    navigate("/user-profile");
-  } catch (e) {
-    console.log(e.message);
+    if (error.response) {
+      if (error.response.status === 401) {
+        setEmailError("Invalid email or password.");
+      } else if (error.response.status === 500) {
+        setEmailError("Server error. Please try again later.");
+      } else {
+        setEmailError(error.response.data?.message || "Login failed.");
+      }
+    } else if (error.request) {
+      setEmailError("Cannot connect to server. Please check your internet connection.");
+    } else {
+      setEmailError("An unexpected error occurred.");
+    }
   }
 };
 
@@ -113,7 +121,6 @@ const Login = () => {
                 <input
                   id="email-address"
                   name="email"
-                  // type="email"
                   autoComplete="email"
                   required
                   className={`appearance-none block w-full pl-12 pr-3 py-4 border rounded-xl placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-sm transition-colors ${inputBg} ${isDarkMode ? "text-white" : "text-black"} ${
@@ -174,10 +181,7 @@ const Login = () => {
                 </label>
               </div>
               <div className="text-sm">
-                <a
-                  href="#"
-                  className={`font-medium hover:underline ${textNormal}`}
-                >
+                <a href="#" className={`font-medium hover:underline ${textNormal}`}>
                   Forgot password?
                 </a>
               </div>
@@ -212,11 +216,7 @@ const Login = () => {
           {/* Social Logins */}
           <div className="grid grid-cols-4 gap-3">
             <button className={`col-span-2 flex items-center justify-center gap-2 py-3 px-4 border rounded-xl shadow-sm text-sm font-medium transition-colors ${borderDefault} ${socialBtnBg} ${isDarkMode ? "text-white" : "text-gray-700"}`}>
-              <img
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                alt="Google"
-                className="w-5 h-5"
-              />
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
               Sign in with Google
             </button>
             <button className={`col-span-1 flex items-center justify-center py-3 px-4 border rounded-xl shadow-sm text-sm font-medium bg-white text-blue-600 hover:bg-gray-50 transition-colors ${borderDefault} ${isDarkMode ? "!bg-[#1a1a1a] hover:!bg-[#222222]" : ""}`}>
@@ -231,10 +231,7 @@ const Login = () => {
           <div className="text-center mt-8">
             <p className={`text-sm ${textNormal}`}>
               Don't have an account?{' '}
-              <Link
-                to="/register"
-                className={`font-semibold hover:underline ${textLink}`}
-              >
+              <Link to="/register" className={`font-semibold hover:underline ${textLink}`}>
                 Register Here!
               </Link>
             </p>
