@@ -8,7 +8,6 @@ import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
 
 import { Auth } from "./context/AuthContext";
-import { AdminGuard } from "./context/AuthContext";
 import { BookingProvider } from "./context/BookingContext";
 
 const App = () => {
@@ -24,14 +23,7 @@ const App = () => {
           <Route path="/*" element={<UserLayout />} />
 
           {/* Admin Routes — protected, admin only */}
-          <Route
-            path="/admin/*"
-            element={
-              <AdminGuard>
-                <AdminLayout />
-              </AdminGuard>
-            }
-          />
+          <Route path="/admin/*" element={<AdminLayout />} />
 
           {/* Not Found */}
           <Route path="/not-found" element={<NotFound />} />
