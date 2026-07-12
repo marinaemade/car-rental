@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAdmin } from "../../../context/AdminContext";
 import StatusBadge from "../../../components/admin/StatusBadge";
 import {
-  ArrowLeftIcon, PencilIcon, TrashIcon,
+  ArrowLeftIcon,
   CalendarIcon, CurrencyDollarIcon, TruckIcon, UserIcon, CreditCardIcon,
 } from "@heroicons/react/24/outline";
 
@@ -50,14 +50,6 @@ const BookingView = () => {
             <h2 className="text-2xl font-bold text-white">Booking Detail</h2>
             <p className="text-gray text-sm font-mono">{booking.id}</p>
           </div>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => navigate(`/admin/bookings/${id}/edit`)} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 text-gray hover:text-white hover:bg-white/5 text-sm font-medium transition-colors">
-            <PencilIcon className="h-4 w-4" /> Edit
-          </button>
-          <button onClick={() => navigate(`/admin/bookings/${id}/delete`)} className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm font-medium transition-colors">
-            <TrashIcon className="h-4 w-4" /> Delete
-          </button>
         </div>
       </div>
 
