@@ -8,6 +8,7 @@ import Login from "./pages/auth/login/Login";
 import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
 import { Auth  } from "./context/AuthContext";
+// delete this duplicate 
 import { BookingProvider } from "./context/BookingContext";
 import User from "./pages/user/userPage/User";
 
