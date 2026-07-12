@@ -10,6 +10,9 @@ import NotFound from "./pages/notFound/NotFound";
 import { Auth } from "./context/AuthContext";
 import { BookingProvider } from "./context/BookingContext";
 
+
+console.log("hello");
+
 const App = () => {
   return (
     <Auth>
