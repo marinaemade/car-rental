@@ -6,6 +6,7 @@ import { fetchUser,updateUser } from './../../../api/UserApi';
 import { fetchBookings } from './../../../api/BookingApi';
 
 const ProfileTab = () => {
+  console.log("hello")
   const { theme } = useContext(ThemeContext);
   const isDarkMode = theme === 'dark';
 
