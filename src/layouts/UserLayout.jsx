@@ -35,6 +35,8 @@ const UserLayout = () => {
 
             <Route path="cart" element={<Cart />} />
             <Route path="reservation" element={<Reservation />} />
+            <Route path="payment" element={<PaymentDetails />} />
+            <Route path="checkout" element={<Checkout />} />
 
             <Route
               path="user-profile"
