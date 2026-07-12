@@ -1,37 +1,40 @@
-import { Route, Routes } from "react-router-dom";
-import UserLayout from "./layouts/UserLayout";
-import AdminLayout from "./layouts/AdminLayout";
+import { createContext, useContext, useState } from "react";
 
-// Auth Pages
-import Login from "./pages/auth/login/Login";
-import SignUp from "./pages/auth/signup/SignUp";
-import NotFound from "./pages/notFound/NotFound";
+const BookingContext = createContext(null);
 
-import { Auth } from "./context/AuthContext";
-import { BookingProvider } from "./context/BookingContext";
+export const BookingProvider = ({ children }) => {
+  const [selectedCar, setSelectedCar] = useState(null);
+  const [bookingData, setBookingData] = useState({
+    pickupData: "",
+    returnData: "",
+    pickupLocation: "",
+    driverOption: "",
+  });
+  const [cart, setCart] = useState([]);
+  const removeFormCart = (carId) => {
+    setCart((prevCart) => prevCart.filter(item => item !== carId));
+    setSelectedCar(null);
+  };
 
-const App = () => {
   return (
-    <Auth>
-      <BookingProvider>
-        <Routes>
-          {/* Auth Routes (no layout) */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<SignUp />} />
+    <BookingContext.Provider
+      value={{
+        selectedCar,
+        setSelectedCar,
 
-          {/* User Routes */}
-          <Route path="/*" element={<UserLayout />} />
+        bookingData,
+        setBookingData,
 
-          {/* Admin Routes — protected, admin only */}
-          <Route path="/admin/*" element={<AdminLayout />} />
-
-          {/* Not Found */}
-          <Route path="/not-found" element={<NotFound />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BookingProvider>
-    </Auth>
+        cart,
+        setCart,
+        removeFormCart,
+      }}
+    >
+      {children}
+    </BookingContext.Provider>
   );
 };
 
-export default App;
+export const useBooking = () => useContext(BookingContext);
+
+export default BookingContext;
