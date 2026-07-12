@@ -63,7 +63,7 @@ export default function Cars() {
       result = result.filter((car) => car.category === selectedCategory);
     if (searchTerm)
       result = result.filter((car) =>
-        `${car.brand} ${car.model}`
+        '${car.brand} ${car.model}'
           .toLowerCase()
           .includes(searchTerm.toLowerCase()),
       );
