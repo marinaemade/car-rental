@@ -16,6 +16,7 @@ import ThemeProvider from "../context/ThemeContext";
 import BookingsTab from './../pages/user/userPage/BookingsTab';
 import ProfileTab from './../pages/user/userPage/ProfileTab';
 import LoggedUsers from './../context/LoggedUsers';
+import NotFound from './../pages/notFound/NotFound';
 
 const UserLayout = () => {
   return (
@@ -33,8 +34,26 @@ const UserLayout = () => {
             <Route path="cars" element={<Cars />} />
             <Route path="cars/:id" element={<CarDetails />} />
 
-            <Route path="cart" element={<Cart />} />
-            <Route path="reservation" element={<Reservation />} />
+            <Route
+              path="cart"
+              element={
+                <LoggedUsers>
+                  <Cart />
+                </LoggedUsers>
+              }
+            />
+
+            <Route
+              path="reservation"
+              element={
+                <LoggedUsers>
+                  <Reservation />
+                </LoggedUsers>
+              }
+            />
+
+            <Route path="payment" element={<PaymentDetails />} />
+            <Route path="checkout" element={<Checkout />} />
 
             <Route
               path="user-profile"
@@ -54,8 +73,7 @@ const UserLayout = () => {
               }
             />
 
-            <Route path="payment" element={<PaymentDetails />} />
-            <Route path="checkout" element={<Checkout />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
 

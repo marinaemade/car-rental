@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmin } from "../../../context/AdminContext";
 import StatusBadge from "../../../components/admin/StatusBadge";
-import { PlusIcon, MagnifyingGlassIcon, PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 const STATUSES = ["All", "Pending", "Confirmed", "Active", "Completed", "Cancelled"];
 
@@ -48,12 +48,7 @@ const Bookings = () => {
               className="bg-black/40 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder:text-gray/60 focus:outline-none focus:border-green/50 w-48"
             />
           </div>
-          <button
-            onClick={() => navigate("/admin/bookings/add")}
-            className="flex items-center gap-2 bg-green hover:bg-darkGreen text-black font-bold px-4 py-2 rounded-xl text-sm transition-colors"
-          >
-            <PlusIcon className="h-4 w-4" /> New Booking
-          </button>
+
         </div>
       </div>
 
@@ -95,12 +90,6 @@ const Bookings = () => {
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => navigate(`/admin/bookings/${b.id}`)} className="p-1.5 text-gray hover:text-white hover:bg-white/10 rounded-lg">
                         <EyeIcon className="h-4 w-4" />
-                      </button>
-                      <button onClick={() => navigate(`/admin/bookings/${b.id}/edit`)} className="p-1.5 text-gray hover:text-white hover:bg-white/10 rounded-lg">
-                        <PencilIcon className="h-4 w-4" />
-                      </button>
-                      <button onClick={() => navigate(`/admin/bookings/${b.id}/delete`)} className="p-1.5 text-gray hover:text-red-400 hover:bg-red-500/10 rounded-lg">
-                        <TrashIcon className="h-4 w-4" />
                       </button>
                     </div>
                   </td>

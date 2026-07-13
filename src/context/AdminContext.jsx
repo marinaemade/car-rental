@@ -1,12 +1,44 @@
 // Admin context
 import { createContext, useContext, useState, useEffect } from "react";
 
+
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+const getHeaders = () => {
+  const token = localStorage.getItem("tc");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
 const AdminContext = createContext(null);
 
 const MOCK_EXPENSES = [
-  { id: "EXP-1001", date: "2024-05-01", description: "Office Rent", category: "Utilities", amount: 1200, loggedBy: "Admin" },
-  { id: "EXP-1002", date: "2024-05-03", description: "Oil Change - BMW M3", category: "Maintenance", amount: 150, loggedBy: "Mechanic" },
-  { id: "EXP-1003", date: "2024-05-05", description: "Digital Marketing", category: "Marketing", amount: 500, loggedBy: "Admin" },
+  {
+    id: "EXP-1001",
+    date: "2024-05-01",
+    description: "Office Rent",
+    category: "Utilities",
+    amount: 1200,
+    loggedBy: "Admin",
+  },
+  {
+    id: "EXP-1002",
+    date: "2024-05-03",
+    description: "Oil Change - BMW M3",
+    category: "Maintenance",
+    amount: 150,
+    loggedBy: "Mechanic",
+  },
+  {
+    id: "EXP-1003",
+    date: "2024-05-05",
+    description: "Digital Marketing",
+    category: "Marketing",
+    amount: 500,
+    loggedBy: "Admin",
+  },
 ];
 
 export const AdminProvider = ({ children }) => {
@@ -21,39 +53,39 @@ export const AdminProvider = ({ children }) => {
   useEffect(() => {
     const load = async () => {
       try {
-        const cached = localStorage.getItem("adminData");
-        if (cached) {
-          const data = JSON.parse(cached);
-          setBookings(data.bookings || []);
-          setUnits(data.units || []);
-          setClients(data.clients || []);
-          setDrivers(data.drivers || []);
-          setExpenses(data.expenses?.length > 0 ? data.expenses : MOCK_EXPENSES);
-          setStats(data.stats || null);
-          setLoading(false);
-          return;
-        }
-
-        const [bookRes, dataRes, usersRes, driversRes, statsRes] = await Promise.all([
-          fetch("/bookings.json"),
-          fetch("/data.json"),
-          fetch("/users.json"),
-          fetch("/drivers.json"),
-          fetch("/stats.json"),
+        setLoading(true);
+        const headers = getHeaders();
+        const [bookRes, carsRes, usersRes, driversRes] = await Promise.all([
+          fetch(`${BASE_URL}/bookings`, { headers }),
+          fetch(`${BASE_URL}/cars`, { headers }),
+          fetch(`${BASE_URL}/users`, { headers }),
+          fetch(`${BASE_URL}/drivers`, { headers }),
         ]);
 
-        const [bookData, carsData, usersData, driversData, statsData] = await Promise.all([
+        if (!bookRes.ok || !carsRes.ok || !usersRes.ok || !driversRes.ok) {
+          throw new Error("Failed to fetch admin data from backend API");
+        }
+
+        const [bookData, carsData, usersData, driversData] = await Promise.all([
           bookRes.json(),
-          dataRes.json(),
+          carsRes.json(),
           usersRes.json(),
           driversRes.json(),
-          statsRes.json(),
         ]);
 
         setBookings(bookData);
         setClients(usersData);
         setDrivers(driversData);
-        setStats(statsData);
+        setStats({
+          revenueByMonth: [
+            { month: "Jan", amount: 4000 },
+            { month: "Feb", amount: 3000 },
+            { month: "Mar", amount: 2000 },
+            { month: "Apr", amount: 2780 },
+            { month: "May", amount: 1890 },
+            { month: "Jun", amount: 2390 },
+          ],
+        });
 
         const mappedUnits = carsData.map((car) => ({
           id: car.id,
@@ -61,7 +93,11 @@ export const AdminProvider = ({ children }) => {
           brand: car.brand,
           model: car.model,
           type: car.category,
-          status: car.available ? "Available" : car.status === "Maintenance" ? "Maintenance" : "Rented",
+          status: car.available
+            ? "Available"
+            : car.status === "Maintenance"
+              ? "Maintenance"
+              : "Rented",
           price: car.price,
           image: car.image,
           specs: {
@@ -73,7 +109,22 @@ export const AdminProvider = ({ children }) => {
         }));
         setUnits(mappedUnits);
       } catch (err) {
-        console.error("AdminContext: Failed to load data", err);
+        console.error(
+          "AdminContext: Failed to load data from server, utilizing local cache fallback",
+          err,
+        );
+        const cached = localStorage.getItem("adminData");
+        if (cached) {
+          const data = JSON.parse(cached);
+          setBookings(data.bookings || []);
+          setUnits(data.units || []);
+          setClients(data.clients || []);
+          setDrivers(data.drivers || []);
+          setExpenses(
+            data.expenses?.length > 0 ? data.expenses : MOCK_EXPENSES,
+          );
+          setStats(data.stats || null);
+        }
       } finally {
         setLoading(false);
       }
@@ -84,9 +135,17 @@ export const AdminProvider = ({ children }) => {
 
   useEffect(() => {
     if (!loading) {
-      localStorage.setItem("adminData", JSON.stringify({
-        bookings, units, clients, drivers, expenses, stats,
-      }));
+      localStorage.setItem(
+        "adminData",
+        JSON.stringify({
+          bookings,
+          units,
+          clients,
+          drivers,
+          expenses,
+          stats,
+        }),
+      );
     }
   }, [bookings, units, clients, drivers, expenses, stats, loading]);
 
@@ -94,115 +153,286 @@ export const AdminProvider = ({ children }) => {
   if (stats) {
     const totalRevenue = bookings
       .filter((b) => b.status === "Completed" || b.status === "Active")
-      .reduce((sum, b) => sum + b.totalPrice, 0);
+      .reduce((sum, b) => sum + (b.totalPrice || 0), 0);
 
     derived = {
       totalRevenue,
-      activeBookings: bookings.filter((b) => b.status === "Active" || b.status === "Confirmed").length,
+      activeBookings: bookings.filter(
+        (b) => b.status === "Active" || b.status === "Confirmed",
+      ).length,
       totalCars: units.length,
       newCustomers: clients.length,
       revenueByMonth: stats.revenueByMonth,
       fleetBreakdown: [
-        { name: "Available", value: units.filter((u) => u.status === "Available").length },
-        { name: "Rented", value: units.filter((u) => u.status === "Rented").length },
-        { name: "Maintenance", value: units.filter((u) => u.status === "Maintenance").length },
+        {
+          name: "Available",
+          value: units.filter((u) => u.status === "Available").length,
+        },
+        {
+          name: "Rented",
+          value: units.filter((u) => u.status === "Rented").length,
+        },
+        {
+          name: "Maintenance",
+          value: units.filter((u) => u.status === "Maintenance").length,
+        },
       ],
     };
   }
 
-  const addBooking = (booking) => {
-    const newId = `BK-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const newBooking = { ...booking, id: newId };
-    const updatedBookings = [newBooking, ...bookings];
-    setBookings(updatedBookings);
+  const addBooking = async (booking) => {
+    try {
+      const res = await fetch(`${BASE_URL}/bookings`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(booking),
+      });
+      if (!res.ok) throw new Error("Failed to add booking");
+      const savedBooking = await res.json();
+      setBookings((prev) => [savedBooking, ...prev]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const updateBooking = (id, updates) => {
-    const updatedBookings = bookings.map((b) => (b.id == id ? { ...b, ...updates } : b));
-    setBookings(updatedBookings);
+  const updateBooking = async (id, updates) => {
+    try {
+      const res = await fetch(`${BASE_URL}/bookings/${id}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error("Failed to update booking");
+      const updatedBooking = await res.json();
+      setBookings((prev) => prev.map((b) => (b.id == id ? updatedBooking : b)));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const deleteBooking = (id) => {
-    const updatedBookings = bookings.filter((b) => b.id != id);
-    setBookings(updatedBookings);
+    // Booking deletion is unsupported on the server side; perform local cleanup
+    setBookings((prev) => prev.filter((b) => b.id != id));
   };
 
-  const updateBookingStatus = (id, status) => {
-    const updatedBookings = bookings.map((b) => (b.id == id ? { ...b, status } : b));
-    setBookings(updatedBookings);
+  const updateBookingStatus = async (id, status) => {
+    try {
+      const res = await fetch(`${BASE_URL}/bookings/${id}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error("Failed to update booking status");
+      const updatedBooking = await res.json();
+      setBookings((prev) => prev.map((b) => (b.id == id ? updatedBooking : b)));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const addUnit = (unit) => {
-    const newUnit = { ...unit, id: Date.now() + Math.random() };
-    const updatedUnits = [newUnit, ...units];
-    setUnits(updatedUnits);
+  const addUnit = async (unit) => {
+    try {
+      const res = await fetch(`${BASE_URL}/cars`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(unit),
+      });
+      if (!res.ok) throw new Error("Failed to add unit");
+      const savedUnit = await res.json();
+      const mapped = {
+        id: savedUnit.id,
+        name: `${savedUnit.brand} ${savedUnit.model}`,
+        brand: savedUnit.brand,
+        model: savedUnit.model,
+        type: savedUnit.category,
+        status: savedUnit.available ? "Available" : "Rented",
+        price: savedUnit.price,
+        image: savedUnit.image,
+        specs: {
+          transmission: savedUnit.transmission,
+          seats: savedUnit.seats,
+          fuel: savedUnit.fuelType,
+        },
+        available: savedUnit.available,
+      };
+      setUnits((prev) => [mapped, ...prev]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const updateUnit = (id, updates) => {
-    const updatedUnits = units.map((u) => (u.id == id ? { ...u, ...updates } : u));
-    setUnits(updatedUnits);
+  const updateUnit = async (id, updates) => {
+    try {
+      const res = await fetch(`${BASE_URL}/cars/${id}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error("Failed to update unit");
+      const updatedUnit = await res.json();
+      const mapped = {
+        id: updatedUnit.id,
+        name: `${updatedUnit.brand} ${updatedUnit.model}`,
+        brand: updatedUnit.brand,
+        model: updatedUnit.model,
+        type: updatedUnit.category,
+        status: updatedUnit.available ? "Available" : "Rented",
+        price: updatedUnit.price,
+        image: updatedUnit.image,
+        specs: {
+          transmission: updatedUnit.transmission,
+          seats: updatedUnit.seats,
+          fuel: updatedUnit.fuelType,
+        },
+        available: updatedUnit.available,
+      };
+      setUnits((prev) => prev.map((u) => (u.id == id ? mapped : u)));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const deleteUnit = (id) => {
-    const updatedUnits = units.filter((u) => u.id != id);
-    setUnits(updatedUnits);
+  const deleteUnit = async (id) => {
+    try {
+      const res = await fetch(`${BASE_URL}/cars/${id}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to delete unit");
+      setUnits((prev) => prev.filter((u) => u.id != id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const addClient = (client) => {
-  const newId = `U-${Date.now()}`;
-
-  const newClient = {
-    ...client,
-    id: newId,
-    joinDate: new Date().toISOString().split("T")[0],
-    totalBookings: 0
-  };
-  setClients([newClient, ...clients]);
-};
-
-  const updateClient = (id, updates) => {
-    const updatedClients = clients.map((c) => (c.id == id ? { ...c, ...updates } : c));
-    setClients(updatedClients);
+  const addClient = async (client) => {
+    try {
+      const res = await fetch(`${BASE_URL}/users`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(client),
+      });
+      if (!res.ok) throw new Error("Failed to add client");
+      const savedClient = await res.json();
+      setClients((prev) => [savedClient, ...prev]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const deleteClient = (id) => {
-    const updatedClients = clients.filter((c) => c.id != id);
-    setClients(updatedClients);
+  const updateClient = async (id, updates) => {
+    try {
+      const res = await fetch(`${BASE_URL}/users/${id}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error("Failed to update client");
+      const updatedClient = await res.json();
+      setClients((prev) => prev.map((c) => (c.id == id ? updatedClient : c)));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const addDriver = (driver) => {
-    const newDriver = {
-      ...driver,
-      id: `D-${Date.now()}`,
-      rating: 5.0,
-      totalTrips: 0,
-      joinDate: new Date().toISOString().split("T")[0],
-    };
-    const updatedDrivers = [newDriver, ...drivers];
-    setDrivers(updatedDrivers);
+  const deleteClient = async (id) => {
+    try {
+      const res = await fetch(`${BASE_URL}/users/${id}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to delete client");
+      setClients((prev) => prev.filter((c) => c.id != id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const updateDriver = (id, updates) => {
-    const updatedDrivers = drivers.map((d) => (d.id == id ? { ...d, ...updates } : d));
-    setDrivers(updatedDrivers);
+  const addDriver = async (driver) => {
+    try {
+      const res = await fetch(`${BASE_URL}/drivers`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(driver),
+      });
+      if (!res.ok) throw new Error("Failed to add driver");
+      const savedDriver = await res.json();
+      setDrivers((prev) => [savedDriver, ...prev]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const deleteDriver = (id) => {
-    const updatedDrivers = drivers.filter((d) => d.id != id);
-    setDrivers(updatedDrivers);
+  const updateDriver = async (id, updates) => {
+    try {
+      const res = await fetch(`${BASE_URL}/drivers/${id}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error("Failed to update driver");
+      const updatedDriver = await res.json();
+      setDrivers((prev) => prev.map((d) => (d.id == id ? updatedDriver : d)));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const assignDriver = (driverId, bookingId) => {
-    const driver = drivers.find((d) => d.id == driverId);
-    if (!driver) return;
-    const updatedDrivers = drivers.map((d) => (d.id == driverId ? { ...d, status: "On Trip" } : d));
-    const updatedBookings = bookings.map((b) => (b.id == bookingId ? { ...b, driverId, driverName: driver.name, status: "Active" } : b));
-    setDrivers(updatedDrivers);
-    setBookings(updatedBookings);
+  const deleteDriver = async (id) => {
+    try {
+      const res = await fetch(`${BASE_URL}/drivers/${id}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
+      if (!res.ok) throw new Error("Failed to delete driver");
+      setDrivers((prev) => prev.filter((d) => d.id != id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const assignDriver = async (driverId, bookingId) => {
+    try {
+      const driver = drivers.find((d) => d.id == driverId);
+      if (!driver) return;
+
+      const [bookingRes, driverRes] = await Promise.all([
+        fetch(`${BASE_URL}/bookings/${bookingId}`, {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify({ driverId, status: "Active" }),
+        }),
+        fetch(`${BASE_URL}/drivers/${driverId}`, {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify({ status: "On Trip" }),
+        }),
+      ]);
+
+      if (!bookingRes.ok || !driverRes.ok) {
+        throw new Error("Failed to assign driver on server");
+      }
+
+      const updatedBooking = await bookingRes.json();
+      const updatedDriver = await driverRes.json();
+
+      setDrivers((prev) =>
+        prev.map((d) => (d.id === driverId ? updatedDriver : d)),
+      );
+      setBookings((prev) =>
+        prev.map((b) => (b.id === bookingId ? updatedBooking : b)),
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const addExpense = (expense) => {
-    const newExpense = { ...expense, id: `EXP-${Date.now()}`, loggedBy: "Admin" };
+    const newExpense = {
+      ...expense,
+      id: `EXP-${Date.now()}`,
+      loggedBy: "Admin",
+    };
     const updatedExpenses = [newExpense, ...expenses];
     setExpenses(updatedExpenses);
   };
@@ -215,13 +445,29 @@ export const AdminProvider = ({ children }) => {
   return (
     <AdminContext.Provider
       value={{
-        bookings, units, clients, drivers, expenses,
-        stats: derived, loading,
-        addBooking, updateBooking, deleteBooking, updateBookingStatus,
-        addUnit, updateUnit, deleteUnit,
-        addClient, updateClient, deleteClient,
-        addDriver, updateDriver, deleteDriver, assignDriver,
-        addExpense, deleteExpense,
+        bookings,
+        units,
+        clients,
+        drivers,
+        expenses,
+        stats: derived,
+        loading,
+        addBooking,
+        updateBooking,
+        deleteBooking,
+        updateBookingStatus,
+        addUnit,
+        updateUnit,
+        deleteUnit,
+        addClient,
+        updateClient,
+        deleteClient,
+        addDriver,
+        updateDriver,
+        deleteDriver,
+        assignDriver,
+        addExpense,
+        deleteExpense,
       }}
     >
       {children}

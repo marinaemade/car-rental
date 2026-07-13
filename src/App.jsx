@@ -7,31 +7,38 @@ import AdminLayout from "./layouts/AdminLayout";
 import Login from "./pages/auth/login/Login";
 import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
-import { Auth  } from "./context/AuthContext";
-import User from "./pages/user/userPage/User";
+import { Auth } from "./context/AuthContext";
+import { AdminGuard } from "./context/AuthContext";
+import { BookingProvider } from "./context/BookingContext";
 
 const App = () => {
-
   return (
-     <Auth>
-      <Routes>
-        {/* Auth Routes (no layout) */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<SignUp />} />
+    <Auth>
+      <BookingProvider>
+        <Routes>
+          {/* Auth Routes (no layout) */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<SignUp />} />
 
+          {/* User Routes */}
+          <Route path="/*" element={<UserLayout />} />
 
-        {/* User Routes */}
-        <Route path="/*" element={<UserLayout />} />
-        
-        {/* Admin Routes */}
-        <Route path="/admin/*" element={<AdminLayout />} />
+          {/* Admin Routes — protected, admin only */}
+          <Route
+            path="/admin/*"
+            element={
+              <AdminGuard>
+                <AdminLayout />
+              </AdminGuard>
+            }
+          />
 
-        {/* Not Found */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          {/* Not Found */}
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BookingProvider>
     </Auth>
-
-
   );
 };
 

@@ -2,63 +2,101 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiEdit2, FiX, FiCheck, FiDollarSign } from 'react-icons/fi';
 import { FaCarSide } from 'react-icons/fa6';
 import { ThemeContext } from './../../../context/ThemeContext'; 
+import { fetchUser,updateUser } from './../../../api/UserApi';
+import { fetchBookings } from './../../../api/BookingApi';
+import Loading from './../../../components/common/Loading/Loading';
 
 const ProfileTab = () => {
   const { theme } = useContext(ThemeContext);
   const isDarkMode = theme === 'dark';
 
-  // Form & Loading States (Ready for Backend Integration)
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [userData, setUserData] = useState({
-    name: 'Marina Emad',
-    email: 'marmouraemade@gmail.com',
-    phone: '+20 123 456 7890',
-    location: 'Giza, Egypt',
-  });
+  const emptyUser = {
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  };
+  
+  // Form & Loading States 
+  const [loading, setLoading] = useState(false); // for fetching data
+  const [loadingData, setLoadingData] = useState(false); // for saving edited data
+  const [successMessage, setSuccessMessage] = useState(''); // displays "Profile updated successfully!", Then disappears after 3 secs.
+  const [userData, setUserData] = useState(emptyUser);
 
   // Edit states
-  const [formData, setFormData] = useState({ ...userData });
-  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState(emptyUser); // to store what a user is typing after save, not immediatly
+  const [isEditing, setIsEditing] = useState(false); // save if it's edit or read only mode
 
-  // Mock stats styled with icons
-  const stats = [
-    { id: 1, label: 'Total Bookings', value: '0', icon: <FaCarSide className="w-5 h-5" /> },
-    { id: 2, label: 'Active Rentals', value: '0', icon: <FiCheck className="w-5 h-5" /> },
-    { id: 3, label: 'Total Spent', value: '$0', icon: <FiDollarSign className="w-5 h-5" /> },
-  ];
+  // Bookings Stats
+  const [stats, setStats] = useState({
+    totalBookings: 0,
+    activeRentals: 0,
+    totalSpent: 0,
+  });
 
-  // Sync data if loaded from an external backend API later
+  // Function to get user and booking data
   useEffect(() => {
-    setFormData({ ...userData });
-  }, [userData]);
+    setLoading(true);
+    Promise.all([
+      fetchUser(),
+      fetchBookings(),
+    ]) // returns both requests as both requests start at the same time 
+    .then(([user, bookings]) => {
+      setUserData(user); // store original data
+      setFormData(user); // copy data to editable form
+
+      const totalBookings = bookings.length;
+      const activeRentals = bookings.filter(
+        booking => booking.status === "Confirmed"
+      ).length;
+      const totalSpent = bookings.reduce(
+        (sum, booking) => sum + booking.totalPrice,
+        0
+      );
+      
+      setStats({
+        totalBookings,
+        activeRentals,
+        totalSpent,
+      })
+    })
+
+    .catch( (error)=> {
+      console.error(error);
+    }).finally(() => {
+      setLoading(false);
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value })); //only that [name]=> selected value changes and everything else remain as it is
   };
 
+  // Edit Profile Function
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setSuccessMessage('');
 
-    try {
-      // API call placeholder:
-      // await axios.put('/api/user/profile', formData);
-      
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      setUserData({ ...formData });
+    setLoadingData(true);
+    setSuccessMessage("");
+
+    updateUser(userData.id, formData)
+    .then((updatedUser) => {
+      setUserData(updatedUser);
+      setFormData(updatedUser);
       setIsEditing(false);
-      setSuccessMessage('Profile updated successfully!');
-      
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    } finally {
-      setLoading(false);
-    }
+      setSuccessMessage("Profile updated successfully!");
+
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
+      setLoadingData(false);
+    });
   };
 
   // Dynamic Theme Styling Classes 
@@ -68,6 +106,30 @@ const ProfileTab = () => {
   const borderClass = isDarkMode ? 'border-lightDark' : 'border-grayLight';
   const textMutedClass = isDarkMode ? 'text-gray' : 'text-lightDark';
 
+  const statsCards = [
+    {
+      id: 1,
+      label: "Total Bookings",
+      value: stats.totalBookings,
+      icon: <FaCarSide className="w-5 h-5" />,
+    },
+    {
+      id: 2,
+      label: "Active Rentals",
+      value: stats.activeRentals,
+      icon: <FiCheck className="w-5 h-5" />,
+    },
+    {
+      id: 3,
+      label: "Total Spent",
+      value: `$${stats.totalSpent}`,
+      icon: <FiDollarSign className="w-5 h-5" />,
+    },
+  ];
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div className={`mt-16 min-h-screen p-4 sm:p-6 md:p-8 transition-colors duration-300 ${bgClass}`}>
       <div className="max-w-5xl mx-auto space-y-8">
@@ -83,11 +145,11 @@ const ProfileTab = () => {
         {/* Header/Hero Section */}
         <div className={`p-6 sm:p-8 rounded-2xl border ${borderClass} ${cardBgClass} flex flex-col sm:flex-row items-center gap-6`}>
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-green text-white flex items-center justify-center text-3xl font-bold shadow-lg shadow-green/20">
-            {formData.name ? formData.name.charAt(0).toUpperCase() : 'M'}
+            {formData.name ? formData.name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div className="text-center sm:text-left flex-1">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              Welcome back, <span className="text-green">{formData.name.split(' ')[0].toLowerCase()}</span>!
+              Welcome back, <span className="text-green">{formData.name ? formData.name.split(" ")[0] : ""}</span>!
             </h1>
             <p className={`text-sm mt-1 ${textMutedClass}`}>{formData.email}</p>
           </div>
@@ -116,7 +178,7 @@ const ProfileTab = () => {
 
         {/* Stats Grid Dashboard Style */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {stats.map((stat) => (
+          {statsCards.map((stat) => (
             <div 
               key={stat.id} 
               className={`p-5 rounded-xl border ${borderClass} ${cardBgClass} flex items-center justify-between transition-transform hover:scale-[1.01]`}
@@ -200,15 +262,15 @@ const ProfileTab = () => {
                 </div>
               </div>
 
-              {/* Location */}
+              {/* address */}
               <div>
-                <label className={`block text-sm font-medium mb-2 ${textMutedClass}`}>Location</label>
+                <label className={`block text-sm font-medium mb-2 ${textMutedClass}`}>Address</label>
                 <div className="relative">
                   <FiMapPin className={`absolute left-4 top-1/2 -translate-y-1/2 ${textMutedClass} w-5 h-5`} />
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
+                    name="address"
+                    value={formData.address}
                     onChange={handleChange}
                     disabled={!isEditing}
                     className={`w-full pl-12 pr-4 py-3 rounded-xl border transition-all duration-200 outline-none focus:border-green ${inputBgClass} ${
@@ -225,10 +287,10 @@ const ProfileTab = () => {
               <div className="flex justify-end pt-4 border-t border-lightDark border-opacity-40">
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loadingData}
                   className="w-full sm:w-auto px-6 py-3 rounded-xl bg-green text-white font-medium hover:bg-darkGreen transition-all duration-200 shadow-lg shadow-green/20 flex items-center justify-center gap-2"
                 >
-                  {loading ? (
+                  {loadingData ? (
                     <>
                       <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
