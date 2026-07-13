@@ -4,9 +4,9 @@ import { FaCarSide } from 'react-icons/fa6';
 import { ThemeContext } from './../../../context/ThemeContext'; 
 import { fetchUser,updateUser } from './../../../api/UserApi';
 import { fetchBookings } from './../../../api/BookingApi';
+import Loading from './../../../components/common/Loading/Loading';
 
 const ProfileTab = () => {
-  console.log("hello")
   const { theme } = useContext(ThemeContext);
   const isDarkMode = theme === 'dark';
 
@@ -18,7 +18,8 @@ const ProfileTab = () => {
   };
   
   // Form & Loading States 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // for fetching data
+  const [loadingData, setLoadingData] = useState(false); // for saving edited data
   const [successMessage, setSuccessMessage] = useState(''); // displays "Profile updated successfully!", Then disappears after 3 secs.
   const [userData, setUserData] = useState(emptyUser);
 
@@ -35,6 +36,7 @@ const ProfileTab = () => {
 
   // Function to get user and booking data
   useEffect(() => {
+    setLoading(true);
     Promise.all([
       fetchUser(),
       fetchBookings(),
@@ -45,7 +47,7 @@ const ProfileTab = () => {
 
       const totalBookings = bookings.length;
       const activeRentals = bookings.filter(
-        booking => booking.status === "Active"
+        booking => booking.status === "Confirmed"
       ).length;
       const totalSpent = bookings.reduce(
         (sum, booking) => sum + booking.totalPrice,
@@ -61,7 +63,9 @@ const ProfileTab = () => {
 
     .catch( (error)=> {
       console.error(error);
-    })
+    }).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const handleChange = (e) => {
@@ -73,7 +77,7 @@ const ProfileTab = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    setLoadingData(true);
     setSuccessMessage("");
 
     updateUser(userData.id, formData)
@@ -91,7 +95,7 @@ const ProfileTab = () => {
       console.error(error);
     })
     .finally(() => {
-      setLoading(false);
+      setLoadingData(false);
     });
   };
 
@@ -123,6 +127,9 @@ const ProfileTab = () => {
     },
   ];
 
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div className={`mt-16 min-h-screen p-4 sm:p-6 md:p-8 transition-colors duration-300 ${bgClass}`}>
       <div className="max-w-5xl mx-auto space-y-8">
@@ -280,10 +287,10 @@ const ProfileTab = () => {
               <div className="flex justify-end pt-4 border-t border-lightDark border-opacity-40">
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loadingData}
                   className="w-full sm:w-auto px-6 py-3 rounded-xl bg-green text-white font-medium hover:bg-darkGreen transition-all duration-200 shadow-lg shadow-green/20 flex items-center justify-center gap-2"
                 >
-                  {loading ? (
+                  {loadingData ? (
                     <>
                       <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
