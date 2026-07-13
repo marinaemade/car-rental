@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaCalendarAlt, FaClock, FaMoneyBillWave, FaLock } from "react-icons/fa";
 import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { useBooking } from "../../../context/BookingContext";
 import { Link, useNavigate } from "react-router-dom";
+import { createBooking } from "./../../../api/BookingApi";
 
 const Cart = () => {
   const { selectedCar, bookingData, removeFromCart, removeFormCart } = useBooking();
@@ -21,6 +22,30 @@ const Cart = () => {
   const rowFinalTotal = rowTotalCarPrice + serviceFees; 
   const totalCarPrice = rowTotalCarPrice.toLocaleString();
   const finalTotal =  rowFinalTotal.toLocaleString();
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleBooking = () => {
+  const newBooking = {
+    carId: selectedCar._id || selectedCar.id,
+    startDate: bookingData.pickupDate,
+    endDate: bookingData.returnDate,
+    totalPrice: rowFinalTotal,
+  };
+
+  createBooking(newBooking)
+    .then(() => {
+      setSuccessMessage("Booking done successfully!");
+
+      setTimeout(() => {
+        setSuccessMessage("");
+        navigate("/user-bookings");
+      }, 2000);
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("Booking failed.");
+    });
+};
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-6 pt-32">
@@ -125,11 +150,17 @@ const Cart = () => {
               <p className="text-[#4ade80] text-xl font-bold">${finalTotal}</p>
             </div>
 
-            <Link to="/checkout">
-              <button className="w-full bg-[#22c55e] text-white py-3 rounded-xl hover:bg-[#4ade80] transition-all">
-                CheckOut
-              </button>
-            </Link>
+          {successMessage && (
+            <div className="fixed top-6 right-6 bg-green text-white px-6 py-3 rounded-lg shadow-lg z-50">
+              {successMessage}
+            </div>
+          )}
+            <button
+              onClick={handleBooking}
+              className="w-full bg-[#22c55e] text-white py-3 rounded-xl hover:bg-[#4ade80] transition-all"
+            >
+              Book Now
+            </button>
 
             <p className="text-xs text-center text-gray-400 flex items-center justify-center gap-1">
               <FaLock />
