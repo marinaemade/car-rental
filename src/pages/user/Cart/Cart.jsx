@@ -27,6 +27,7 @@ const Cart = () => {
   const handleBooking = () => {
   const newBooking = {
     carId: selectedCar._id || selectedCar.id,
+    carName: selectedCar.carName || `${selectedCar.brand} ${selectedCar.model}`,
     startDate: bookingData.pickupDate,
     endDate: bookingData.returnDate,
     totalPrice: rowFinalTotal,

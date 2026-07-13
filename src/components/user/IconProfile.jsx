@@ -43,8 +43,8 @@ const IconProfile = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogOut = ()=>{
-    navigate("/");
     logout();
+    navigate("/login");
   }
   
   return (
