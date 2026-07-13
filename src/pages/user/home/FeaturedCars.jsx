@@ -27,22 +27,21 @@ const FeaturedCars = ({car}) => {
   const textMutedClass = isDarkMode ? "text-gray" : "text-lightDark";
   const priceBadgeBg = isDarkMode ? "bg-black/80" : "bg-white/90";
 
-  useEffect(() => {
-    // Fetch data from the data.json file
-    const fetchCars = async () => {
-      try {
-        const response = await fetch('/data.json');
-        const data = await response.json();
-        setCars(data.slice(0, 6));
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching car data:", error);
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchCars = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/cars`);
+      const data = await response.json();
+      setCars(data.slice(0, 6));
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching car data:", error);
+      setLoading(false);
+    }
+  };
 
-    fetchCars();
-  }, []);
+  fetchCars();
+}, []);
 
   if (loading) {
     return (
