@@ -12,19 +12,19 @@ export const Auth = ({ children }) => {
 
   const login = (token) => {
     setLogged(true);
-    localStorage.setItem("tc", token);
+    localStorage.setItem("token", token);
     const userData = jwtDecode(token);
     setUser(userData);
   };
 
   const logout = () => {
     setLogged(false);
-    localStorage.removeItem("tc");
+    localStorage.removeItem("token");
     setUser(null);
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("tc");
+    const token = localStorage.getItem("token");
     if (token) {
       // there is a token
       login(token); // call login to restore the state of setLogged to "true" when the user refreshes
@@ -51,7 +51,7 @@ export const AdminGuard = ({ children }) => {
     return null; // or return a loading spinner
   }
   if (!logged || user?.role !== "admin") {
-    return <Navigate to="/not-found" replace />;
+    return <Navigate to="/login" replace />;
   }
   return children;
 };

@@ -77,27 +77,6 @@ src/
 - **Heroicons** - Icon library
 - **Vite** - Build tool
 
-## Simplifications Made for Beginners
-
-The project has been simplified to make it easier to understand and maintain:
-
-### Removed Complex Features
-- **Dashboard Charts**: Removed complex Recharts visualizations (AreaChart, PieChart) - now shows simple stat cards
-- **Kanban View**: Removed drag-and-drop Kanban board from Bookings page - now uses simple table view
-- **Grid View**: Removed card grid from Units page - now uses simple table view
-- **Live Tracking**: Removed real-time GPS tracking page (too complex for beginners)
-- **Messages**: Removed messaging system (too complex for beginners)
-
-### Removed Unused Dependencies
-- `@hello-pangea/dnd` - drag and drop library (not needed after removing Kanban)
-- `axios` - HTTP client (not used, app uses localStorage)
-- `heroicons` - duplicate of @heroicons/react
-- `react-icons` - icon library (not used, app uses @heroicons/react)
-
-### Simplified Configuration
-- Removed custom animations from Tailwind config
-- Removed empty context files (AuthContext, BookingContext, CartContext)
-
 ### Current Admin Features
 - Dashboard with simple stat cards
 - Bookings management (table view with CRUD)
@@ -120,7 +99,6 @@ The application uses:
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint
 
-## Beginner Notes
 
 ### How the App Works
 

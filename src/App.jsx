@@ -1,3 +1,4 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import UserLayout from "./layouts/UserLayout";
 import AdminLayout from "./layouts/AdminLayout";
@@ -6,9 +7,10 @@ import AdminLayout from "./layouts/AdminLayout";
 import Login from "./pages/auth/login/Login";
 import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
-
 import { Auth } from "./context/AuthContext";
+import { AdminGuard } from "./context/AuthContext";
 import { BookingProvider } from "./context/BookingContext";
+
 
 
 console.log("hello");
@@ -26,7 +28,14 @@ const App = () => {
           <Route path="/*" element={<UserLayout />} />
 
           {/* Admin Routes — protected, admin only */}
-          <Route path="/admin/*" element={<AdminLayout />} />
+          <Route
+            path="/admin/*"
+            element={
+              <AdminGuard>
+                <AdminLayout />
+              </AdminGuard>
+            }
+          />
 
           {/* Not Found */}
           <Route path="/not-found" element={<NotFound />} />

@@ -38,3 +38,4 @@ export const BookingProvider = ({ children }) => {
 export const useBooking = () => useContext(BookingContext);
 
 export default BookingContext;
+

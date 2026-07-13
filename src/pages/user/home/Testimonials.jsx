@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Typography, Card, CardBody, Avatar, Carousel, IconButton } from "@material-tailwind/react";
 import { StarIcon } from "@heroicons/react/24/solid";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ThemeContext } from './../../../context/ThemeContext';
 
 const REVIEWS = [
   {
@@ -31,14 +32,25 @@ const REVIEWS = [
 ];
 
 const Testimonials = () => {
+  const { theme } = useContext(ThemeContext);
+  const isDarkMode = theme === "dark";
+
+  // Dynamic Theme Styling Classes based on your palette
+  const bgClass = isDarkMode ? "bg-dark" : "bg-grayLight bg-opacity-30";
+  const cardBgClass = isDarkMode ? "bg-surface" : "bg-grayLight bg-opacity-30";
+  const borderClass = isDarkMode ? "border-lightDark" : "border-surface";
+  const textTitleClass = isDarkMode ? "text-white" : "text-black";
+  const textMutedClass = isDarkMode ? "text-gray" : "text-lightDark";
+  const arrowBtnBg = isDarkMode ? "bg-dark/50" : "bg-grayLight/70 text-black";
+
   return (
-    <section className=" py-24 px-4 md:px-8 border-t border-lightDark bg-dark">
+    <section className={`py-24 px-4 md:px-8 border-t ${borderClass} ${bgClass} transition-colors duration-300`}>
       <div className="mx-auto max-w-5xl">
         <div className="text-center mb-12 md:mb-16 flex flex-col items-center">
           <Typography variant="small" className="text-green font-bold uppercase tracking-widest mb-4">
             Testimonials
           </Typography>
-          <Typography variant="h2" className="text-white text-3xl md:text-4xl font-bold mb-4">
+          <Typography variant="h2" className={`${textTitleClass} text-3xl md:text-4xl font-bold mb-4`}>
             What <span className="text-green">RahalCar</span> Customers Say
           </Typography>
           <div className="h-1 w-20 bg-green rounded-full"></div>
@@ -53,10 +65,10 @@ const Testimonials = () => {
           prevArrow={({ handlePrev }) => (
             <IconButton
               variant="text"
-              color="white"
+              color={isDarkMode ? "white" : "black"}
               size="lg"
               onClick={handlePrev}
-              className="!absolute top-2/4 left-4 -translate-y-2/4 bg-dark/50 hover:bg-green/20 rounded-full hidden md:flex"
+              className={`!absolute top-2/4 left-4 -translate-y-2/4 ${arrowBtnBg} hover:bg-green/20 rounded-full hidden md:flex`}
             >
               <ArrowLeftIcon strokeWidth={2} className="h-6 w-6" />
             </IconButton>
@@ -64,10 +76,10 @@ const Testimonials = () => {
           nextArrow={({ handleNext }) => (
             <IconButton
               variant="text"
-              color="white"
+              color={isDarkMode ? "white" : "black"}
               size="lg"
               onClick={handleNext}
-              className="!absolute top-2/4 !right-4 -translate-y-2/4 bg-dark/50 hover:bg-green/20 rounded-full hidden md:flex"
+              className={`!absolute top-2/4 !right-4 -translate-y-2/4 ${arrowBtnBg} hover:bg-green/20 rounded-full hidden md:flex`}
             >
               <ArrowRightIcon strokeWidth={2} className="h-6 w-6" />
             </IconButton>
@@ -89,7 +101,7 @@ const Testimonials = () => {
           {REVIEWS.map((review) => (
             // REDUCED MOBILE PADDING
             <div key={review.id} className="px-2 md:px-24">
-              <Card className="bg-dark border border-lightDark shadow-none">
+              <Card className={`${cardBgClass} border ${borderClass} shadow-none`}>
                 <CardBody className="p-6 md:p-12 text-center flex flex-col items-center">
                   <div className="flex gap-1 mb-6">
                     {[...Array(review.rating)].map((_, i) => (
@@ -97,7 +109,7 @@ const Testimonials = () => {
                     ))}
                   </div>
 
-                  <Typography className="text-gray text-base md:text-lg italic mb-8 leading-relaxed font-normal max-w-2xl">
+                  <Typography className={`${textMutedClass} text-base md:text-lg italic mb-8 leading-relaxed font-normal max-w-2xl`}>
                     "{review.content}"
                   </Typography>
 
@@ -110,7 +122,7 @@ const Testimonials = () => {
                       className="border-2 border-green/30"
                     />
                     <div>
-                      <Typography className="text-white font-bold text-base">
+                      <Typography className={`${textTitleClass} font-bold text-base`}>
                         {review.name}
                       </Typography>
                       <Typography className="text-green text-xs font-medium uppercase tracking-wider">

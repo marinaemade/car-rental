@@ -10,9 +10,14 @@ import Cars from "../pages/user/cars/Cars";
 import CarDetails from "../pages/user/carDetails/CarDetails";
 import Cart from "../pages/user/Cart/Cart";
 import Reservation from "../pages/user/reservation/Reservation";
+import PaymentDetails from "../pages/user/reservation/PaymentDetails";
 import Checkout from "../pages/user/checkout/Checkout";
-import User from "../pages/user/userPage/User";
 import ThemeProvider from "../context/ThemeContext";
+import BookingsTab from './../pages/user/userPage/BookingsTab';
+import ProfileTab from './../pages/user/userPage/ProfileTab';
+import LoggedUsers from './../context/LoggedUsers';
+import NotFound from './../pages/notFound/NotFound';
+
 const UserLayout = () => {
   return (
     <ThemeProvider> 
@@ -23,20 +28,59 @@ const UserLayout = () => {
         <main className="flex-grow">
           <Routes>
             <Route index element={<Home />} />
-            <Route path="user" element={<User />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
+
             <Route path="cars" element={<Cars />} />
             <Route path="cars/:id" element={<CarDetails />} />
-            <Route path="cart" element={<Cart />} />
-            <Route path="reservation" element={<Reservation />} />
+
+            <Route
+              path="cart"
+              element={
+                <LoggedUsers>
+                  <Cart />
+                </LoggedUsers>
+              }
+            />
+
+            <Route
+              path="reservation"
+              element={
+                <LoggedUsers>
+                  <Reservation />
+                </LoggedUsers>
+              }
+            />
+
+            <Route path="payment" element={<PaymentDetails />} />
             <Route path="checkout" element={<Checkout />} />
+
+            <Route
+              path="user-profile"
+              element={
+                <LoggedUsers>
+                  <ProfileTab />
+                </LoggedUsers>
+              }
+            />
+
+            <Route
+              path="user-bookings"
+              element={
+                <LoggedUsers>
+                  <BookingsTab />
+                </LoggedUsers>
+              }
+            />
+
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
 
         <Footer />
       </div>
     </ThemeProvider>
+
   );
 };
 

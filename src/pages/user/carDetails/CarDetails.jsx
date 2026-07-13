@@ -21,33 +21,45 @@ export default function CarDetails() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showFull, setShowFull] = useState(false);
 
-  useEffect(() => {
-    const getCarData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/data.json");
-        const allCars = await response.json();
-        const foundCar = allCars.find((c) => String(c.id) === String(id));
+useEffect(() => {
+  const getCarData = async () => {
+    try {
+      setLoading(true);
 
-        if (foundCar) {
-          setCar(foundCar);
-          const similar = allCars
-            .filter(
-              (c) => c.category === foundCar.category && c.id !== foundCar.id,
-            )
-            .slice(0, 3);
-          setSimilarCars(similar);
-        }
-      } catch (error) {
-        console.error("Fetch error:", error);
-      } finally {
-        setLoading(false);
+      // Fetch the specific car directly from the backend
+      const carResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/cars/${id}`,
+      );
+
+      if (!carResponse.ok) {
+        setCar(null);
+        return;
       }
-    };
 
-    getCarData();
-    window.scrollTo(0, 0);
-  }, [id]);
+      const foundCar = await carResponse.json();
+      setCar(foundCar);
+      const allCarsResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/cars`,
+      );
+      const allCars = await allCarsResponse.json();
+
+      const similar = allCars
+        .filter(
+          (c) => c.category === foundCar.category && c.id !== foundCar.id,
+        )
+        .slice(0, 3);
+      setSimilarCars(similar);
+    } catch (error) {
+      console.error("Fetch error:", error);
+      setCar(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  getCarData();
+  window.scrollTo(0, 0);
+}, [id]);
 
   if (loading) {
     return (

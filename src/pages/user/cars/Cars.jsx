@@ -42,20 +42,20 @@ export default function Cars() {
   }, [maxPrice]);
 
   useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/data.json");
-        const data = await response.json();
-        setCars(data);
-      } catch (error) {
-        console.error("Error fetching cars:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCars();
-  }, []);
+  const fetchCars = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/cars`);
+      const data = await response.json();
+      setCars(data);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchCars();
+}, []);
 
   const filteredCars = useMemo(() => {
     let result = [...cars];
@@ -63,7 +63,7 @@ export default function Cars() {
       result = result.filter((car) => car.category === selectedCategory);
     if (searchTerm)
       result = result.filter((car) =>
-        `${car.brand} ${car.model}`
+        '${car.brand} ${car.model}'
           .toLowerCase()
           .includes(searchTerm.toLowerCase()),
       );
