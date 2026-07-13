@@ -1,28 +1,78 @@
-// Booking index
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdmin } from "../../../context/AdminContext";
 import StatusBadge from "../../../components/admin/StatusBadge";
-import { MagnifyingGlassIcon, EyeIcon } from "@heroicons/react/24/outline";
+import {
+  MagnifyingGlassIcon,
+  EyeIcon,
+  CheckIcon,
+  XMarkIcon,
+  PencilIcon,
+} from "@heroicons/react/24/outline";
 
-const STATUSES = ["All", "Pending", "Confirmed", "Active", "Completed", "Cancelled"];
+const STATUSES = [
+  "All",
+  "Pending",
+  "Confirmed",
+  "Past",
+  "Cancelled",
+];
+const EDITABLE_STATUSES = [
+  "Pending",
+  "Confirmed",
+  "Past",
+  "Cancelled",
+];
 
 const Bookings = () => {
-  const { bookings } = useAdmin();
+  const { bookings, updateBookingStatus } = useAdmin();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+
+  const [editingId, setEditingId] = useState(null);
+  const [editStatus, setEditStatus] = useState("");
+  const [updatingId, setUpdatingId] = useState(null);
 
   const filtered = bookings
     .filter((b) => statusFilter === "All" || b.status === statusFilter)
     .filter((b) => {
       const q = search.toLowerCase();
-      return !q || b.customerName?.toLowerCase().includes(q) || b.carName?.toLowerCase().includes(q) || b.id?.toLowerCase().includes(q);
+      return (
+        !q ||
+        b.customerName?.toLowerCase().includes(q) ||
+        b.carName?.toLowerCase().includes(q) ||
+        b.id?.toLowerCase().includes(q)
+      );
     });
 
   const totalValue = filtered.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
 
-  const formatDate = (d) => new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+  const handleEditClick = (booking) => {
+    setEditingId(booking.id);
+    setEditStatus(booking.status);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditStatus("");
+  };
+
+  const handleSaveStatus = async (id) => {
+    setUpdatingId(id);
+    try {
+      await updateBookingStatus(id, editStatus);
+      setEditingId(null);
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+      alert("Failed to update status.");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   return (
     <div className="py-4 space-y-6">
@@ -36,7 +86,9 @@ const Bookings = () => {
             <span className="text-white font-bold">{filtered.length}</span>
             <span className="text-gray">bookings</span>
             <div className="w-px h-4 bg-white/10" />
-            <span className="text-green font-bold">${totalValue.toLocaleString()}</span>
+            <span className="text-green font-bold">
+              ${totalValue.toLocaleString()}
+            </span>
           </div>
           <div className="relative">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray" />
@@ -48,7 +100,6 @@ const Bookings = () => {
               className="bg-black/40 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-sm text-white placeholder:text-gray/60 focus:outline-none focus:border-green/50 w-48"
             />
           </div>
-
         </div>
       </div>
 
@@ -58,7 +109,9 @@ const Bookings = () => {
             key={s}
             onClick={() => setStatusFilter(s)}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-all ${
-              statusFilter === s ? "bg-green text-black border-green" : "bg-surface border-white/10 text-gray hover:text-white"
+              statusFilter === s
+                ? "bg-green text-black border-green"
+                : "bg-surface border-white/10 text-gray hover:text-white"
             }`}
           >
             {s}
@@ -71,33 +124,107 @@ const Bookings = () => {
           <table className="w-full text-left min-w-[800px]">
             <thead>
               <tr className="border-b border-white/5 text-gray text-xs uppercase tracking-wider bg-black/20">
-                {["ID", "Customer", "Vehicle", "Dates", "Amount", "Payment", "Status", ""].map((h) => (
-                  <th key={h} className="px-5 py-4 font-medium">{h}</th>
+                {[
+                  "ID",
+                  "Customer",
+                  "Vehicle",
+                  "Dates",
+                  "Amount",
+                  "Payment",
+                  "Status",
+                  "",
+                ].map((h) => (
+                  <th key={h} className="px-5 py-4 font-medium">
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {filtered.map((b) => (
-                <tr key={b.id} className="hover:bg-white/5 transition-colors group">
-                  <td className="px-5 py-4 text-xs font-mono text-gray">{b.id}</td>
-                  <td className="px-5 py-4 text-sm text-white font-medium">{b.customerName}</td>
+                <tr
+                  key={b.id}
+                  className="hover:bg-white/5 transition-colors group"
+                >
+                  <td className="px-5 py-4 text-xs font-mono text-gray">
+                    {b.id}
+                  </td>
+                  <td className="px-5 py-4 text-sm text-white font-medium">
+                    {b.customerName}
+                  </td>
                   <td className="px-5 py-4 text-sm text-gray">{b.carName}</td>
-                  <td className="px-5 py-4 text-xs text-gray">{formatDate(b.startDate)} → {formatDate(b.endDate)}</td>
-                  <td className="px-5 py-4 text-sm font-bold text-white">${b.totalPrice?.toLocaleString()}</td>
-                  <td className="px-5 py-4 text-xs text-gray">{b.paymentMethod}</td>
-                  <td className="px-5 py-4"><StatusBadge status={b.status} type="pill" /></td>
+                  <td className="px-5 py-4 text-xs text-gray">
+                    {formatDate(b.startDate)} → {formatDate(b.endDate)}
+                  </td>
+                  <td className="px-5 py-4 text-sm font-bold text-white">
+                    ${b.totalPrice?.toLocaleString()}
+                  </td>
+                  <td className="px-5 py-4 text-xs text-gray">
+                    {b.paymentMethod}
+                  </td>
                   <td className="px-5 py-4">
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => navigate(`/admin/bookings/${b.id}`)} className="p-1.5 text-gray hover:text-white hover:bg-white/10 rounded-lg">
-                        <EyeIcon className="h-4 w-4" />
-                      </button>
+                    {editingId === b.id ? (
+                      <select
+                        value={editStatus}
+                        onChange={(e) => setEditStatus(e.target.value)}
+                        className="p-1.5 text-xs rounded-lg border border-white/10 bg-black/40 text-white focus:outline-none focus:border-green/50"
+                      >
+                        {EDITABLE_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <StatusBadge status={b.status} type="pill" />
+                    )}
+                  </td>
+                  <td className="px-5 py-4">
+                    <div className="flex justify-end items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {editingId === b.id ? (
+                        <>
+                          <button
+                            onClick={() => handleSaveStatus(b.id)}
+                            disabled={updatingId === b.id}
+                            className="p-1.5 bg-green/20 text-green rounded-lg hover:bg-green/30"
+                            title="Save"
+                          >
+                            <CheckIcon className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            className="p-1.5 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/30"
+                            title="Cancel"
+                          >
+                            <XMarkIcon className="h-4 w-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleEditClick(b)}
+                            className="p-1.5 text-gray hover:text-white hover:bg-white/10 rounded-lg"
+                            title="Edit Status"
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => navigate(`/admin/bookings/${b.id}`)}
+                            className="p-1.5 text-gray hover:text-white hover:bg-white/10 rounded-lg"
+                          >
+                            <EyeIcon className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-5 py-12 text-center text-gray">No bookings match your filters.</td>
+                  <td colSpan={8} className="px-5 py-12 text-center text-gray">
+                    No bookings match your filters.
+                  </td>
                 </tr>
               )}
             </tbody>
