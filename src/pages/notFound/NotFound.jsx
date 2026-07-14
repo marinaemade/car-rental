@@ -48,7 +48,7 @@ const NotFound = () => {
 
         {/* Branding Subtext */}
         <Typography className="text-gray/30 my-10 uppercase tracking-[0.5em] text-xs font-bold">
-          RahalCar New York
+          RahalCar Cairo Egypt
         </Typography>
       </div>
     </div>

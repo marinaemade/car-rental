@@ -89,7 +89,7 @@ const BookingsTab = () => {
     <div
       className={`mt-14 min-h-screen p-4 sm:p-6 md:p-8 transition-colors duration-300 ${bgClass}`}
     >
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto space-y-6  mt-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-green bg-opacity-10 text-green rounded-lg">
