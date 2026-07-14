@@ -1,163 +1,145 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FiSun, FiMoon, FiUser, FiLogOut, FiLogIn, FiUserPlus } from 'react-icons/fi';
-import { ThemeContext } from '../../../context/ThemeContext';
-import { useAuth } from '../../../context/AuthContext';
+// Nav
+import { Link } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeContext";
+import { FaCarSide } from "react-icons/fa6";
+import { Navbar, Collapse, IconButton } from "@material-tailwind/react";
+import Logo from "../../common/Logo/Logo";
+
+import {
+  HomeIcon,
+  InformationCircleIcon,
+  PhoneIcon,
+  UserIcon,
+  Bars3Icon,
+  XMarkIcon,
+  SunIcon,
+  MoonIcon,
+} from "@heroicons/react/24/outline";
+
+import { useAuth } from "../../../context/AuthContext";
+import IconProfile from './../IconProfile';
 
 const Nav = () => {
+  const [openNav, setOpenNav] = useState(false);
+
+  const {logged}=useAuth();
+
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const isDarkMode = theme === 'dark';
-  
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
 
-  // Get first letter of user name
-  const getFirstLetter = () => {
-    return user?.name ? user.name.charAt(0).toUpperCase() : 'U';
-  };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
+    const handleResize = () => {
+      if (window.innerWidth >= 960) setOpenNav(false);
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Handle sign out
-  const handleSignOut = () => {
-    logout();
-    setShowDropdown(false);
-    navigate('/');
-  };
+  // تعديل بسيط في الألوان عشان تليق مع الـ Dark Mode
+ const linkClass =
+"flex items-center gap-2 text-black dark:text-grayLight font-medium transition-all duration-300 hover:text-green dark:hover:text-softGreen hover:-translate-y-0.5";
+  
+  const navList = (
+    <ul className="flex flex-col gap-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-8">
+      <li>
+        <Link to="/" className={linkClass}>
+          <HomeIcon className="h-5 w-5" />
+          Home
+        </Link>
+      </li>
+      <li>
+        <Link to="/about" className={linkClass}>
+          <InformationCircleIcon className="h-5 w-5" />
+          About
+        </Link>
+      </li>
+      <li>
+        <Link to="/contact" className={linkClass}>
+          <PhoneIcon className="h-5 w-5" />
+          Contact
+        </Link>
+      </li>
+      <li>
+        <Link to="/cars" className={linkClass}>
+          <FaCarSide className="h-5 w-5" />
+          Cars
+        </Link>
+      </li>
+    </ul>
+  );
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
-      isDarkMode ? 'bg-dark border-lightDark' : 'bg-white border-gray'
-    } border-b`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold">
-              Rahal<span className="text-green">Car</span>
-            </span>
-          </Link>
+    <Navbar
+      shadow={false}
+      blurred={false}
+      className="
+        fixed top-0 left-0 right-0 z-50
+        w-full max-w-full
+        rounded-none
+        bg-white dark:bg-black
+        border-b border-grayLight/40 dark:border-lightDark
+        shadow-md
+        px-4 py-3 lg:px-8
+        transition-all duration-300
+      "
+    >
+      <div className="flex items-center justify-between w-full">
+        {/* LOGO */}
+        <Logo />
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/" className={`hover:text-green transition-colors ${isDarkMode ? 'text-white' : 'text-black'}`}>
-              Home
-            </Link>
-            <Link to="/about" className={`hover:text-green transition-colors ${isDarkMode ? 'text-white' : 'text-black'}`}>
-              About
-            </Link>
-            <Link to="/contact" className={`hover:text-green transition-colors ${isDarkMode ? 'text-white' : 'text-black'}`}>
-              Contact
-            </Link>
-            <Link to="/cars" className={`hover:text-green transition-colors ${isDarkMode ? 'text-white' : 'text-black'}`}>
-              Cars
-            </Link>
-          </div>
+        {/* DESKTOP LINKS */}
+        <div className="hidden lg:block">{navList}</div>
 
-          {/* Right Side Icons */}
-          <div className="flex items-center gap-4">
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-lg transition-colors ${
-                isDarkMode ? 'hover:bg-lightDark' : 'hover:bg-grayLight'
-              }`}
-            >
-              {isDarkMode ? <FiSun className="w-5 h-5 text-white" /> : <FiMoon className="w-5 h-5 text-black" />}
-            </button>
+        {/* RIGHT SIDE: Theme Toggle + Profile */}
+        <div className="flex items-center gap-1 sm:gap-3">
+          {/* 4. زرار الـ Dark Mode Mode Toggle */}
+          <IconButton
+            variant="text"
+            onClick={toggleTheme}
+            className="text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            {theme === "light" ? (
+              <MoonIcon className="h-6 w-6 text-blue-gray-900" />
+            ) : (
+              <SunIcon className="h-6 w-6 text-white" />
+            )}
+          </IconButton>
 
-            {/* User Menu Dropdown */}
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setShowDropdown(!showDropdown)}
-                className="flex items-center gap-2 focus:outline-none"
+          {logged ? (
+            <IconProfile />
+          ) : (
+            <Link to="/login">
+              <IconButton
+                variant="text"
+                className="text-black dark:text-white hover:text-green dark:hover:text-softGreen hover:bg-green/10 dark:hover:bg-lightDark transition-all duration-300"
               >
-                <div className="w-10 h-10 rounded-full bg-green text-white flex items-center justify-center font-bold shadow-lg shadow-green/20 hover:opacity-90 transition-opacity">
-                  {user ? getFirstLetter() : <FiUser className="w-5 h-5" />}
-                </div>
-              </button>
+                <UserIcon className="h-6 w-6" />
+              </IconButton>
+            </Link>
+          )}
 
-              {/* Dropdown Menu */}
-              {showDropdown && (
-                <div className={`absolute right-0 mt-2 w-48 rounded-xl shadow-lg py-2 z-50 ${
-                  isDarkMode ? 'bg-surface border border-lightDark' : 'bg-white border border-gray'
-                }`}>
-                  {user ? (
-                    // User is logged in - Show Profile and Sign Out
-                    <>
-                      <Link
-                        to="/user-profile"
-                        onClick={() => setShowDropdown(false)}
-                        className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
-                          isDarkMode ? 'text-white hover:bg-lightDark' : 'text-black hover:bg-grayLight'
-                        }`}
-                      >
-                        <FiUser className="w-4 h-4" />
-                        Profile
-                      </Link>
-                      <button
-                        onClick={handleSignOut}
-                        className={`w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors text-red-500 hover:bg-red-50 ${
-                          isDarkMode ? 'hover:bg-red-900 hover:bg-opacity-20' : ''
-                        }`}
-                      >
-                        <FiLogOut className="w-4 h-4" />
-                        Sign Out
-                      </button>
-                    </>
-                  ) : (
-                    // User is NOT logged in - Show Sign In and Sign Up
-                    <>
-                      <Link
-                        to="/login"
-                        onClick={() => setShowDropdown(false)}
-                        className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
-                          isDarkMode ? 'text-white hover:bg-lightDark' : 'text-black hover:bg-grayLight'
-                        }`}
-                      >
-                        <FiLogIn className="w-4 h-4" />
-                        Sign In
-                      </Link>
-                      <Link
-                        to="/register"
-                        onClick={() => setShowDropdown(false)}
-                        className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
-                          isDarkMode ? 'text-white hover:bg-lightDark' : 'text-black hover:bg-grayLight'
-                        }`}
-                      >
-                        <FiUserPlus className="w-4 h-4" />
-                        Sign Up
-                      </Link>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button className="md:hidden p-2">
-              <div className={`w-6 h-0.5 mb-1.5 ${isDarkMode ? 'bg-white' : 'bg-black'}`}></div>
-              <div className={`w-6 h-0.5 mb-1.5 ${isDarkMode ? 'bg-white' : 'bg-black'}`}></div>
-              <div className={`w-6 h-0.5 ${isDarkMode ? 'bg-white' : 'bg-black'}`}></div>
-            </button>
-          </div>
+          {/* Toggle Button for Mobile */}
+          <IconButton
+            variant="text"
+            className="lg:hidden text-black dark:text-white hover:bg-green/10 dark:hover:bg-lightDark"
+            onClick={() => setOpenNav(!openNav)}
+          >
+            {openNav ? (
+              <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+            ) : (
+              <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+            )}
+          </IconButton>
         </div>
       </div>
-    </nav>
+
+      <Collapse open={openNav}>
+        <div className="container mx-auto mt-4 border-t border-gray-200 dark:border-gray-800 pt-4 pb-2 lg:hidden">
+          {navList}
+        </div>
+      </Collapse>
+    </Navbar>
   );
 };
 

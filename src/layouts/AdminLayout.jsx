@@ -8,20 +8,14 @@ import AdminSidebar from "../components/admin/AdminSidebar";
 // Pages
 import Dashboard from "../pages/admin/Dashboard";
 import Bookings from "../pages/admin/Bookings/index";
-import BookingAdd from "../pages/admin/Bookings/BookingAdd";
-import BookingEdit from "../pages/admin/Bookings/BookingEdit";
 import BookingView from "../pages/admin/Bookings/BookingView";
-import BookingDelete from "../pages/admin/Bookings/BookingDelete";
 import Units from "../pages/admin/Units/index";
 import UnitAdd from "../pages/admin/Units/UnitAdd";
 import UnitEdit from "../pages/admin/Units/UnitEdit";
 import UnitView from "../pages/admin/Units/UnitView";
 import UnitDelete from "../pages/admin/Units/UnitDelete";
 import Clients from "../pages/admin/Clients/index";
-import ClientAdd from "../pages/admin/Clients/ClientAdd";
-import ClientEdit from "../pages/admin/Clients/ClientEdit";
 import ClientView from "../pages/admin/Clients/ClientView";
-import ClientDelete from "../pages/admin/Clients/ClientDelete";
 import Drivers from "../pages/admin/Drivers/index";
 import DriverAdd from "../pages/admin/Drivers/DriverAdd";
 import DriverEdit from "../pages/admin/Drivers/DriverEdit";
@@ -59,10 +53,7 @@ const AdminLayout = () => {
               <Route index element={<Dashboard />} />
 
               <Route path="bookings" element={<Bookings />} />
-              <Route path="bookings/add" element={<BookingAdd />} />
               <Route path="bookings/:id" element={<BookingView />} />
-              <Route path="bookings/:id/edit" element={<BookingEdit />} />
-              <Route path="bookings/:id/delete" element={<BookingDelete />} />
 
               <Route path="units" element={<Units />} />
               <Route path="units/add" element={<UnitAdd />} />
@@ -71,10 +62,7 @@ const AdminLayout = () => {
               <Route path="units/:id/delete" element={<UnitDelete />} />
 
               <Route path="clients" element={<Clients />} />
-              <Route path="clients/add" element={<ClientAdd />} />
               <Route path="clients/:id" element={<ClientView />} />
-              <Route path="clients/:id/edit" element={<ClientEdit />} />
-              <Route path="clients/:id/delete" element={<ClientDelete />} />
 
               <Route path="drivers" element={<Drivers />} />
               <Route path="drivers/add" element={<DriverAdd />} />
