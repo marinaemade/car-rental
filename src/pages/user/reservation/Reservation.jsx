@@ -2,24 +2,23 @@ import React, { useState } from "react";
 import { useBooking } from "../../../context/BookingContext";
 import { FaCar, FaUser, FaMoneyBill, FaShieldAlt } from "react-icons/fa";
 import { FaCcVisa, FaMoneyBillWave } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../../../api/api";
 
 export default function CarBooking() {
   const [openStep, setOpenStep] = useState(1);
-  const [bookingData, setBookingData] =
-  useState({
+  const [bookingData, setBookingData] = useState({
     pickupDate: "",
-  returnDate: "",
-  pickupLocation: "",
-  driverOption: "",
-  driverLanguage: "",
-  
-  specialRequests: "",
-  payment: "",
-  deposit: false,
+    returnDate: "",
+    pickupLocation: "",
+    driverOption: "",
+    driverLanguage: "",
+
+    specialRequests: "",
+    payment: "",
+    deposit: false,
   });
-
-
+  const [errors, setErrors] = useState({});
 
   const { selectedCar, setBookingData: saveBookingData } = useBooking();
   const navigate = useNavigate();
@@ -27,16 +26,74 @@ export default function CarBooking() {
   const toggleStep = (step) => {
     setOpenStep(openStep === step ? 0 : step);
   };
+  const handleConfirmBooking = async () => {
+    const savedCar = JSON.parse(localStorage.getItem("carToEdit"));
+    const carIdToUse = selectedCar?.id || savedCar?.id || savedCar?._id;
 
-const handleConfirmBooking = () => {
-  if (!bookingData.pickupDate || !bookingData.returnDate || !bookingData.pickupLocation) {
-    alert("please fill out this field");
-    return;
-  }
+    const finalBookingData = {
+      ...bookingData,
+      carId: carIdToUse,
+    };
 
-  saveBookingData(bookingData);
-  navigate("/cart");
-};
+    try {
+      const newErrors = {};
+
+      if (!bookingData.pickupDate) {
+        newErrors.pickupDate = "Please enter pickup date";
+      }
+
+      if (!bookingData.returnDate) {
+        newErrors.returnDate = "Please enter return date";
+      }
+
+      if (
+        bookingData.pickupDate &&
+        bookingData.returnDate &&
+        bookingData.returnDate < bookingData.pickupDate
+      ) {
+        newErrors.returnDate = "Return date must be after pickup date";
+      }
+
+      if (
+        !bookingData.pickupLocation ||
+        bookingData.pickupLocation === "Select Location"
+      ) {
+        newErrors.pickupLocation = "Please select pickup location";
+      }
+
+      if (!bookingData.driverOption) {
+        newErrors.driverOption = "Please select driver option";
+      }
+
+      if (
+        bookingData.driverOption === "car with driver" &&
+        (!bookingData.driverLanguage ||
+          bookingData.driverLanguage === "Select Language")
+      ) {
+        newErrors.driverLanguage = "Please select driver language";
+      }
+
+      if (!bookingData.payment) {
+        newErrors.payment = "Please select payment method";
+      }
+
+      if (!bookingData.deposit) {
+        newErrors.deposit = "Please agree to the deposit";
+      }
+
+      setErrors(newErrors);
+
+      if (Object.keys(newErrors).length > 0) {
+        return;
+      }
+      await api.post("/cart", finalBookingData);
+      saveBookingData(finalBookingData);
+      navigate("/cart");
+    } catch (error) {
+      console.error("Error saving booking:", error);
+      alert("Failed to save booking");
+    }
+  };
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100  ">
       {/* Sidebar */}
@@ -80,18 +137,27 @@ const handleConfirmBooking = () => {
                   Pickup Date
                 </label>
                 <input
-                id="Prickup_Date"
-                type="date"
-                value={bookingData.pickupDate || ""}
-                onChange={(e) =>
-                 setBookingData({
-                 ...bookingData,
-                   pickupDate: e.target.value,
-                   })
-                 }
-               className="border p-2 rounded w-full"
-               />
-              
+                  id="Prickup_Date"
+                  type="date"
+                  min={new Date().toISOString().split("T")[0]}
+                  value={bookingData.pickupDate || ""}
+                  onChange={(e) => {
+                    setBookingData({
+                      ...bookingData,
+                      pickupDate: e.target.value,
+                    });
+                    setErrors({
+                      ...errors,
+                      pickupDate: "",
+                    });
+                  }}
+                  className="border p-2 rounded w-full"
+                />
+                {errors.pickupDate && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.pickupDate}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-1">
@@ -102,17 +168,27 @@ const handleConfirmBooking = () => {
                   Return Date
                 </label>
                 <input
-                 type="date"
+                  id=" return_Date"
+                  type="date"
+                  min={new Date().toISOString().split("T")[0]}
                   value={bookingData.returnDate || ""}
-                   onChange={(e) =>
-                 setBookingData({
-                 ...bookingData,
-                   returnDate: e.target.value,
-                   })
-                    }
+                  onChange={(e) => {
+                    setBookingData({
+                      ...bookingData,
+                      returnDate: e.target.value,
+                    });
+                    setErrors({
+                      ...errors,
+                      returnDate: "",
+                    });
+                  }}
                   className="border p-2 rounded w-full"
-                  />
-
+                />
+                {errors.returnDate && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.returnDate}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-1 md:col-span-2">
@@ -123,15 +199,18 @@ const handleConfirmBooking = () => {
                   Pickup Location
                 </label>
                 <select
-                id="pickup_location"
-                 value={bookingData.pickupLocation || ""}
-                  onChange={(e) =>
-                 setBookingData({
-                 ...bookingData,
-                  pickupLocation: e.target.value,
-                   })
-                    }
-                  
+                  id="pickup_location"
+                  value={bookingData.pickupLocation || ""}
+                  onChange={(e) => {
+                    setBookingData({
+                      ...bookingData,
+                      pickupLocation: e.target.value,
+                    });
+                    setErrors({
+                      ...errors,
+                      pickupLocation: "",
+                    });
+                  }}
                   className="border p-2 rounded w-full"
                 >
                   <option>Select Location</option>
@@ -139,6 +218,11 @@ const handleConfirmBooking = () => {
                   <option>Alexandria</option>
                   <option>Giza</option>
                 </select>
+                {errors.pickupLocation && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.pickupLocation}
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -159,71 +243,93 @@ const handleConfirmBooking = () => {
 
                 <div className="flex flex-col md:flex-row gap-4">
                   <label className="flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition">
-                    <span className="text-sm font-medium">
-                      Car Only (Self Drive)
-                    </span>
                     <input
                       id="radio1"
                       name="driver_option"
                       type="radio"
                       value="car only"
                       checked={bookingData.driverOption === "car only"}
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setBookingData({
                           ...bookingData,
                           driverOption: e.target.value,
-                        })
-                      }
+                        });
+                        setErrors({
+                          driverOption: "",
+                          driverLanguage: "",
+                        });
+                      }}
                       className="w-4 h-4 accent-[#22c55e]"
                     />
+                    <span className="text-sm font-medium">
+                      Car Only (Self Drive)
+                    </span>
                   </label>
 
                   <label className="flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition">
-                    <span className="text-sm font-medium">Car with Driver</span>
                     <input
-                       id="radio2"
+                      id="radio2"
                       name="driver_option"
                       type="radio"
                       value="car with driver"
-                       checked={bookingData.driverOption === "car with driver"}
-                      onChange={(e) =>
+                      checked={bookingData.driverOption === "car with driver"}
+                      onChange={(e) => {
                         setBookingData({
                           ...bookingData,
                           driverOption: e.target.value,
-                          driverLanguage: ""
-                        })
-                      }
+                          driverLanguage: "",
+                        });
+                        setErrors({
+                          ...errors,
+                          driverOption: "",
+                        });
+                      }}
                       className="w-4 h-4  accent-[#22c55e]"
                     />
+                    <span className="text-sm font-medium">Car with Driver</span>
                   </label>
+                  {errors.driverOption && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.driverOption}
+                    </p>
+                  )}
                 </div>
               </div>
 
-             {bookingData.driverOption === "car with driver" && (
-               <div className="space-y-2">
-                <label
-                  htmlFor="drivr_language"
-                  className="text-sm font-bold text-gray-700"
-                >
-                  Driver Language
-                </label>
+              {bookingData.driverOption === "car with driver" && (
+                <div className="space-y-2">
+                  <label
+                    htmlFor="drivr_language"
+                    className="text-sm font-bold text-gray-700"
+                  >
+                    Driver Language
+                  </label>
 
-                <select
-                  id="drivr_language"
-                  value={bookingData.driverLanguage}
-                      onChange={(e) =>
-                        setBookingData({
-                          ...bookingData,
-                          driverLanguage: e.target.value,
-                        })
-                      }
-                  className="border p-2 rounded w-full"
-                >
-                  <option>Select Language</option>
-                  <option>Arabic</option>
-                  <option>English</option>
-                </select>
-              </div>
+                  <select
+                    id="drivr_language"
+                    value={bookingData.driverLanguage}
+                    onChange={(e) => {
+                      setBookingData({
+                        ...bookingData,
+                        driverLanguage: e.target.value,
+                      });
+                      setErrors({
+                        ...errors,
+                        driverLanguage: "",
+                      });
+                    }}
+                    className="border p-2 rounded w-full"
+                  >
+                    <option>Select Language</option>
+                    <option>Arabic</option>
+                    <option>English</option>
+                  </select>
+                  {errors.driverLanguage && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.driverLanguage}
+                    </p>
+                  )}
+                </div>
               )}
 
               <div className="space-y-2">
@@ -238,11 +344,11 @@ const handleConfirmBooking = () => {
                   id="spacial_requests"
                   value={bookingData.specialRequests}
                   onChange={(e) =>
-                        setBookingData({
-                          ...bookingData,
-                          specialRequests: e.target.value,
-                        })
-                      }
+                    setBookingData({
+                      ...bookingData,
+                      specialRequests: e.target.value,
+                    })
+                  }
                   className="w-full border rounded-lg p-3 text-sm min-h-[100px]"
                 ></textarea>
               </div>
@@ -261,41 +367,66 @@ const handleConfirmBooking = () => {
 
           {openStep === 3 && (
             <div className="flex gap-4">
-              <label className="flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition">
+              <label
+                className={`flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition
+                ${
+                  bookingData.payment === "visa"
+                    ? "border-green-500 bg-green-100"
+                    : "hover:bg-gray-50"
+                }`}
+              >
                 <input
                   type="radio"
                   name="payment"
                   value="visa"
                   checked={bookingData.payment === "visa"}
-                  onChange={(e) =>
-                        setBookingData({
-                          ...bookingData,
-                          payment: e.target.value,
-                        })
-                      }
-                  className="hidden"
+                  onChange={(e) => {
+                    setBookingData({
+                      ...bookingData,
+                      payment: e.target.value,
+                    });
+                    setErrors({
+                      ...errors,
+                      payment: "",
+                    });
+                  }}
+                  className="w-4 h-4 accent-[#22c55e]"
                 />
                 <FaCcVisa className="text-2xl text-blue-600" />
                 <span className="text-sm font-medium">Credit Card</span>
               </label>
-
-              <label className="flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition">
+              {/* xcvbnm, */}
+              <label
+                className={`flex items-center gap-3 border rounded-lg px-4 py-3 cursor-pointer hover:bg-gray-50 transition
+                ${
+                  bookingData.payment === "cash"
+                    ? "border-green-500 bg-green-100"
+                    : "hover:bg-gray-50"
+                }`}
+              >
                 <input
                   type="radio"
                   name="payment"
                   value="cash"
-                   checked={bookingData.payment === "cash"}
-                  onChange={(e) =>
-                        setBookingData({
-                          ...bookingData,
-                          payment: e.target.value,
-                        })
-                      }
-                  className="hidden"
+                  checked={bookingData.payment === "cash"}
+                  onChange={(e) => {
+                    setBookingData({
+                      ...bookingData,
+                      payment: e.target.value,
+                    });
+                    setErrors({
+                      ...errors,
+                      payment: "",
+                    });
+                  }}
+                  className="w-4 h-4 accent-[#22c55e]"
                 />
                 <FaMoneyBillWave className="text-2xl text-green-600" />
                 <span className="text-sm font-medium">Pay in Cash</span>
               </label>
+              {errors.payment && (
+                <p className="text-red-500 text-sm mt-1">{errors.payment}</p>
+              )}
             </div>
           )}
         </div>
@@ -328,98 +459,83 @@ const handleConfirmBooking = () => {
               </p>
 
               <label className="flex items-center gap-2">
-                <input  
-                type="checkbox"
-                 checked={bookingData.deposit}
+                <input
+                  type="checkbox"
+                  checked={bookingData.deposit}
                   onChange={(e) =>
-                        setBookingData({
-                          ...bookingData,
-                          deposit: e.target.checked,
-                        })
-                      }
-                 className="accent-green-500" />I agree to
-                pay deposit
+                    setBookingData({
+                      ...bookingData,
+                      deposit: e.target.checked,
+                    })
+                  }
+                  className="accent-green-500"
+                />
+                I agree to pay deposit
               </label>
+              {errors.deposit && (
+                <p className="text-red-500 text-sm mt-1">{errors.deposit}</p>
+              )}
             </>
           )}
         </div>
       </div>
 
-<div className="w-full md:w-80 p-5 bg-white rounded-xl shadow-lg top-20 pt-20">
+      <div className="w-full md:w-80 p-5 bg-white rounded-xl shadow-lg top-20 pt-20">
+        <div className="flex justify-center mb-6 bg-gray-100 rounded-lg p-2">
+          <img
+            src={selectedCar?.image}
+            alt={selectedCar?.model}
+            className="w-48 object-contain"
+          />
+        </div>
+        <div className="space-y-3 text-sm">
+          <div className="flex justify-between">
+            <span className="font-bold">Vehicle:</span>
+            <span className="text-gray-600">
+              {selectedCar?.brand} {selectedCar?.model}
+            </span>
+          </div>
 
-  <div className="flex justify-center mb-6 bg-gray-100 rounded-lg p-2">
-    <img
-      src={selectedCar?.image}
-      alt={selectedCar?.model}
-      className="w-48 object-contain"
-    />
-  </div>
+          <div className="flex justify-between">
+            <span className="font-bold">Price / Day:</span>
+            <span className="text-gray-600">${selectedCar?.price}</span>
+          </div>
 
-  <div className="space-y-3 text-sm">
+          <div className="flex justify-between">
+            <span className="font-bold">Category:</span>
+            <span className="text-gray-600">{selectedCar?.category}</span>
+          </div>
 
-    <div className="flex justify-between">
-      <span className="font-bold">Vehicle:</span>
-      <span className="text-gray-600">
-        {selectedCar?.brand} {selectedCar?.model}
-      </span>
+          <div className="flex justify-between">
+            <span className="font-bold">Transmission:</span>
+            <span className="text-gray-600">{selectedCar?.transmission}</span>
+          </div>
+
+          <div className="flex justify-between">
+            <span className="font-bold">Fuel:</span>
+            <span className="text-gray-600">{selectedCar?.fuelType}</span>
+          </div>
+
+          <div className="flex justify-between">
+            <span className="font-bold">Seats:</span>
+            <span className="text-gray-600">{selectedCar?.seats}</span>
+          </div>
+
+          <hr className="my-2" />
+
+          <div className="flex justify-between text-base">
+            <span className="font-bold">Total Price:</span>
+            <span className="font-bold">${selectedCar?.price}</span>
+          </div>
+        </div>{" "}
+        <button
+          type="button"
+          onClick={handleConfirmBooking}
+          className="mt-6 w-full bg-[#22c55e] text-white py-3 rounded-lg font-semibold hover:bg-[#4ade80] transition-all"
+        >
+          Confirm Booking
+        </button>
+      </div>
     </div>
-
-    <div className="flex justify-between">
-      <span className="font-bold">Price / Day:</span>
-      <span className="text-gray-600">
-        ${selectedCar?.price}
-      </span>
-    </div>
-
-    <div className="flex justify-between">
-      <span className="font-bold">Category:</span>
-      <span className="text-gray-600">
-        {selectedCar?.category}
-      </span>
-    </div>
-
-    <div className="flex justify-between">
-      <span className="font-bold">Transmission:</span>
-      <span className="text-gray-600">
-        {selectedCar?.transmission}
-      </span>
-    </div>
-
-    <div className="flex justify-between">
-      <span className="font-bold">Fuel:</span>
-      <span className="text-gray-600">
-        {selectedCar?.fuelType}
-      </span>
-    </div>
-
-    <div className="flex justify-between">
-      <span className="font-bold">Seats:</span>
-      <span className="text-gray-600">
-        {selectedCar?.seats}
-      </span>
-    </div>
-
-    <hr className="my-2" />
-
-    <div className="flex justify-between text-base">
-      <span className="font-bold">Total Price:</span>
-      <span className="font-bold">
-        ${selectedCar?.price}
-      </span>
-    </div>
-
-  </div>
-
-  {/* <Link to="/cart"> */}
-    <button 
-     onClick={handleConfirmBooking} 
-    className="mt-6 w-full bg-[#22c55e] text-white py-3 rounded-lg font-semibold hover:bg-[#4ade80] transition-all"
-    >
-      Confirm Booking
-    </button>
-  {/* </Link> */}
-</div>
-</div> 
-  
-);
-  }
+  );
+}

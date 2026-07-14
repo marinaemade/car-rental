@@ -67,8 +67,12 @@ const Login = () => {
   
     login(response.data.token);
 
-    // Redirect to home page
-    navigate("/");
+    // Redirect based on user role
+    if (response.data.user.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
   } catch (error) {
     console.error("Login Error:", error);
 

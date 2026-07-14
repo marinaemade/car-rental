@@ -1,21 +1,20 @@
-const API_URL = "https://backend-cars-three.vercel.app";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const fetchBookings = () => {
   const token = localStorage.getItem("token");
 
-  return fetch(`${API_URL}/bookings`, {
+  return fetch(`${BASE_URL}/bookings`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch bookings");
-      }
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error("Failed to fetch bookings");
+    }
 
-      return response.json();
-    });
+    return response.json();
+  });
 };
 
 export const createBooking = (bookingData) => {
@@ -23,7 +22,7 @@ export const createBooking = (bookingData) => {
   console.log("Booking data:", bookingData);
   console.log("Token:", localStorage.getItem("token"));
 
-  return fetch(`${API_URL}/bookings`, {
+  return fetch(`${BASE_URL}/bookings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +41,7 @@ export const createBooking = (bookingData) => {
 export const updateBooking = (id, updatedData) => {
   const token = localStorage.getItem("token");
 
-  return fetch(`${API_URL}/bookings/${id}`, {
+  return fetch(`${BASE_URL}/bookings/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -60,7 +59,7 @@ export const updateBooking = (id, updatedData) => {
 export const fetchBookingById = async (id) => {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`${API_URL}/bookings/${id}`, {
+  const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

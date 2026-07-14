@@ -1,9 +1,16 @@
 // Admin header
 import { useNavigate } from "react-router-dom";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "../../context/AuthContext";
 
 const AdminHeader = ({ onToggleSidebar, sidebarOpen }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-black/70 backdrop-blur-xl border-b border-white/5 shadow-lg">
@@ -30,6 +37,15 @@ const AdminHeader = ({ onToggleSidebar, sidebarOpen }) => {
             <p className="text-xs text-green leading-none mt-0.5">Administrator</p>
           </div>
         </div>
+        
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-3 py-2 rounded-xl text-gray hover:text-white hover:bg-red-500/20 transition-colors"
+          title="Logout"
+        >
+          <ArrowRightOnRectangleIcon className="h-5 w-5" />
+          <span className="hidden md:inline text-sm">Logout</span>
+        </button>
       </div>
     </header>
   );

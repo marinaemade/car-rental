@@ -34,6 +34,15 @@ const ProfileTab = () => {
     totalSpent: 0,
   });
 
+  // Errors used when editing 
+  const [errors, setErrors] = useState({
+    email: "",
+    phone: "",
+  });
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  const phoneRegex =
+    /^(?:\+20|0)?1[0125][0-9]{8}$/;
+
   // Function to get user and booking data
   useEffect(() => {
     setLoading(true);
@@ -68,14 +77,55 @@ const ProfileTab = () => {
     });
   }, []);
 
+  // Validate while editing the function
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value })); //only that [name]=> selected value changes and everything else remain as it is
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev) => {
+      const updated = { ...prev };
+
+      if (name === "email") {
+        updated.email =
+          value === "" || emailRegex.test(value)
+            ? ""
+            : "Please enter a valid Gmail address.";
+      }
+
+      if (name === "phone") {
+        updated.phone =
+          value === "" || phoneRegex.test(value)
+            ? ""
+            : "Please enter a valid Egyptian phone number.";
+      }
+
+      return updated;
+    });
   };
 
   // Edit Profile Function
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const newErrors = {};
+
+    if (!emailRegex.test(formData.email.trim())) {
+      newErrors.email = "Please enter a valid Gmail address.";
+    }
+
+    if (!phoneRegex.test(formData.phone.trim())) {
+      newErrors.phone = "Please enter a valid Egyptian phone number.";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
     setLoadingData(true);
     setSuccessMessage("");
@@ -227,39 +277,67 @@ const ProfileTab = () => {
 
               {/* Email Address */}
               <div>
-                <label className={`block text-sm font-medium mb-2 ${textMutedClass}`}>Email Address</label>
+                <label className={`block text-sm font-medium mb-2 ${textMutedClass}`}>
+                  Email Address
+                </label>
+
                 <div className="relative">
-                  <FiMail className={`absolute left-4 top-1/2 -translate-y-1/2 ${textMutedClass} w-5 h-5`} />
+                  <FiMail
+                    className={`absolute left-4 top-1/2 -translate-y-1/2 ${textMutedClass} w-5 h-5`}
+                  />
+
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className={`w-full pl-12 pr-4 py-3 rounded-xl border transition-all duration-200 outline-none focus:border-green ${inputBgClass} ${
-                      !isEditing ? 'opacity-60 cursor-not-allowed' : 'focus:ring-2 focus:ring-green/20'
+                    className={`w-full pl-12 pr-4 py-3 rounded-xl border transition-all duration-200 outline-none focus:border-green ${
+                      inputBgClass
+                    } ${
+                      !isEditing
+                        ? "opacity-60 cursor-not-allowed"
+                        : "focus:ring-2 focus:ring-green/20"
                     }`}
                     required
                   />
                 </div>
+
+                <p className="text-red-500 text-sm mt-1 min-h-[20px]">
+                  {errors.email}
+                </p>
               </div>
 
               {/* Phone Number */}
               <div>
-                <label className={`block text-sm font-medium mb-2 ${textMutedClass}`}>Phone Number</label>
+                <label className={`block text-sm font-medium mb-2 ${textMutedClass}`}>
+                  Phone Number
+                </label>
+
                 <div className="relative">
-                  <FiPhone className={`absolute left-4 top-1/2 -translate-y-1/2 ${textMutedClass} w-5 h-5`} />
+                  <FiPhone
+                    className={`absolute left-4 top-1/2 -translate-y-1/2 ${textMutedClass} w-5 h-5`}
+                  />
+
                   <input
                     type="text"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className={`w-full pl-12 pr-4 py-3 rounded-xl border transition-all duration-200 outline-none focus:border-green ${inputBgClass} ${
-                      !isEditing ? 'opacity-60 cursor-not-allowed' : 'focus:ring-2 focus:ring-green/20'
+                    className={`w-full pl-12 pr-4 py-3 rounded-xl border transition-all duration-200 outline-none focus:border-green ${
+                      inputBgClass
+                    } ${
+                      !isEditing
+                        ? "opacity-60 cursor-not-allowed"
+                        : "focus:ring-2 focus:ring-green/20"
                     }`}
                   />
                 </div>
+
+                <p className="text-red-500 text-sm mt-1 min-h-[20px]">
+                  {errors.phone}
+                </p>
               </div>
 
               {/* address */}

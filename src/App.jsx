@@ -8,8 +8,12 @@ import Login from "./pages/auth/login/Login";
 import SignUp from "./pages/auth/signup/SignUp";
 import NotFound from "./pages/notFound/NotFound";
 import { Auth } from "./context/AuthContext";
-import { AdminGuard } from "./context/AuthContext";
 import { BookingProvider } from "./context/BookingContext";
+import User from "./pages/user/userPage/User";
+
+
+
+console.log("hello");
 
 const App = () => {
   return (
@@ -23,18 +27,10 @@ const App = () => {
           {/* User Routes */}
           <Route path="/*" element={<UserLayout />} />
 
-          {/* Admin Routes — protected, admin only */}
-          <Route
-            path="/admin/*"
-            element={
-              <AdminGuard>
-                <AdminLayout />
-              </AdminGuard>
-            }
-          />
+          {/* Admin Routes */}
+          <Route path="/admin/*" element={<AdminLayout />} />
 
           {/* Not Found */}
-          <Route path="/not-found" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BookingProvider>

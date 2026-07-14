@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { AdminProvider } from "../context/AdminContext";
 import AdminHeader from "../components/admin/AdminHeader";
 import AdminSidebar from "../components/admin/AdminSidebar";
+import { AdminGuard } from "../context/AuthContext";
 
 // Pages
 import Dashboard from "../pages/admin/Dashboard";
@@ -33,6 +34,7 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
+    <AdminGuard>
     <AdminProvider>
       <div className="min-h-screen flex bg-black text-grayLight font-sans selection:bg-green/30 selection:text-white">
         <AdminSidebar
@@ -81,7 +83,8 @@ const AdminLayout = () => {
           </main>
         </div>
       </div>
-    </AdminProvider>
+      </AdminProvider>
+    </AdminGuard>
   );
 };
 
