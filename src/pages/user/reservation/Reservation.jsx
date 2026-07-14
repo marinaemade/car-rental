@@ -472,8 +472,8 @@ export default function CarBooking() {
                 />
                 I agree to pay deposit
               </label>
-              {errors.Deposit && (
-                <p className="text-red-500 text-sm mt-1">{errors.Deposit}</p>
+              {errors.deposit && (
+                <p className="text-red-500 text-sm mt-1">{errors.deposit}</p>
               )}
             </>
           )}
@@ -528,7 +528,6 @@ export default function CarBooking() {
             <span className="font-bold">${selectedCar?.price}</span>
           </div>
         </div>{" "}
-        *
         <button
           type="button"
           onClick={handleConfirmBooking}

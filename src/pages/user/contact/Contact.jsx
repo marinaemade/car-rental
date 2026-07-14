@@ -107,7 +107,7 @@ const Contact = () => {
           </Typography>
           <div className="h-1 w-20 bg-green rounded-full mb-6"></div>
           <Typography className={`${textMutedClass} max-w-2xl px-4 md:px-0`}>
-            Have questions about our New York fleet or special offers? Our team is here 24/7 to assist with your booking.
+            Have questions about our fleet or special offers? Our team is here 24/7 to assist with your booking.
           </Typography>
         </div>
 
@@ -121,7 +121,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <Typography variant="h6" className={`${textTitleClass} font-bold`}>Our Location</Typography>
-                  <Typography className={`${textMutedClass} text-sm`}>123 Luxury Drive, Manhattan<br />New York, NY 10001</Typography>
+                  <Typography className={`${textMutedClass} text-sm`}>123 Luxury Drive, Manhattan<br />Cairo, NS 10001</Typography>
                 </div>
               </CardBody>
             </Card>
@@ -289,13 +289,13 @@ const Contact = () => {
                     <MapPinIcon className="h-8 w-8 text-black" />
                   </div>
                   <Typography variant="h5" className={`${textTitleClass} font-bold mb-2`}>View Interactive Map</Typography>
-                  <Typography className={`${textMutedClass} text-sm md:text-base`}>Click to explore our New York location</Typography>
+                  <Typography className={`${textMutedClass} text-sm md:text-base`}>Click to explore our Cairo location</Typography>
                 </div>
               </div>
               <img 
                 src="https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&q=80&w=1600" 
                 className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity"
-                alt="New York Map View"
+                alt="Cairo Map View"
               />
             </>
           ) : (

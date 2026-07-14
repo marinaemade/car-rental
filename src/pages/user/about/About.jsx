@@ -36,7 +36,7 @@ const About = () => {
     },
     {
       icon: GlobeAltIcon,
-      title: "New York Based",
+      title: "Cairo  Based",
       description: "Deeply rooted in our local community while serving international clients with world-class standards and local expertise."
     }
   ];
@@ -61,7 +61,7 @@ const About = () => {
 
         <Typography className={`${textMutedClass} max-w-3xl text-lg leading-relaxed`}>
           At RahalCar, we don't just rent vehicles; we provide the freedom to explore. 
-          Based in New York, we've built a fleet that combines luxury with reliability, 
+          Based in Cairo, we've built a fleet that combines luxury with reliability, 
           ensuring every mile you drive is a memory made.
         </Typography>
       </section>

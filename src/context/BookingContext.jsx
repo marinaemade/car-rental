@@ -42,6 +42,7 @@ export const BookingProvider = ({ children }) => {
     } catch (error) {
       console.error("Error editing cart:", error);
     }
+  };
     const removeFormCart = (carId) => {
       setCart((prevCart) => prevCart.filter((item) => item !== carId));
       setSelectedCar(null);
@@ -78,4 +79,4 @@ export const BookingProvider = ({ children }) => {
   export const useBooking = () => useContext(BookingContext);
 
   export default BookingContext;
-};
+

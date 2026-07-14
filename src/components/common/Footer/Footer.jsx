@@ -99,16 +99,16 @@ const Footer = () => {
             </Typography>
             <ul className="space-y-2 text-gray text-sm">
               <li className="flex items-center gap-2 hover:text-white transition-colors">
-                <MapPinIcon className="h-4 w-4 text-green" /> New York, NY
+                <MapPinIcon className="h-4 w-4 text-green" /> Cairo
               </li>
               <li className="flex items-center gap-2 hover:text-white transition-colors">
-                <MapPinIcon className="h-4 w-4 text-green" /> Los Angeles, CA
+                <MapPinIcon className="h-4 w-4 text-green" /> Giza
               </li>
               <li className="flex items-center gap-2 hover:text-white transition-colors">
-                <MapPinIcon className="h-4 w-4 text-green" /> Miami, FL
+                <MapPinIcon className="h-4 w-4 text-green" /> Alex
               </li>
               <li className="flex items-center gap-2 hover:text-white transition-colors">
-                <MapPinIcon className="h-4 w-4 text-green" /> Chicago, IL
+                <MapPinIcon className="h-4 w-4 text-green" /> Luxor
               </li>
             </ul>
           </div>
