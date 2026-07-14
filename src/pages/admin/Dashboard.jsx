@@ -69,15 +69,9 @@ const Dashboard = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
           <p className="text-sm text-green font-semibold uppercase tracking-widest mb-1">Admin Dashboard</p>
-          <h2 className="text-3xl font-bold text-white">Good day, Admin 👋</h2>
+          <h2 className="text-3xl font-bold text-white">Good day, Admin </h2>
           <p className="text-gray mt-1">Here's what's happening with your rental business today.</p>
         </div>
-        <button
-          onClick={() => navigate("/admin/bookings")}
-          className="flex items-center gap-2 bg-green hover:bg-darkGreen text-black font-bold px-5 py-2.5 rounded-xl text-sm transition-colors shadow-[0_0_20px_rgba(34,197,94,0.3)]"
-        >
-          New Booking <ArrowRightIcon className="h-4 w-4" />
-        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

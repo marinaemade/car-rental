@@ -42,36 +42,40 @@ export const BookingProvider = ({ children }) => {
     } catch (error) {
       console.error("Error editing cart:", error);
     }
+    const removeFormCart = (carId) => {
+      setCart((prevCart) => prevCart.filter((item) => item !== carId));
+      setSelectedCar(null);
+    };
+
+    // const removeFormCart = async (carId) => {
+    //   try {
+    //     await deleteCart(carId);
+    //     setCart((prevCart) => prevCart.filter((item) => item.id !== carId));
+    //     setSelectedCar(null);
+    //     localStorage.removeItem("selectedCar");
+    //   } catch (error) {}
+    // };
+
+    return (
+      <BookingContext.Provider
+        value={{
+          selectedCar,
+          setSelectedCar,
+
+          bookingData,
+          setBookingData,
+
+          cart,
+          setCart,
+          EditCart,
+        }}
+      >
+        {children}
+      </BookingContext.Provider>
+    );
   };
 
-  // const removeFormCart = async (carId) => {
-  //   try {
-  //     await deleteCart(carId);
-  //     setCart((prevCart) => prevCart.filter((item) => item.id !== carId));
-  //     setSelectedCar(null);
-  //     localStorage.removeItem("selectedCar");
-  //   } catch (error) {}
-  // };
+  export const useBooking = () => useContext(BookingContext);
 
-  return (
-    <BookingContext.Provider
-      value={{
-        selectedCar,
-        setSelectedCar,
-
-        bookingData,
-        setBookingData,
-
-        cart,
-        setCart,
-        EditCart,
-      }}
-    >
-      {children}
-    </BookingContext.Provider>
-  );
+  export default BookingContext;
 };
-
-export const useBooking = () => useContext(BookingContext);
-
-export default BookingContext;

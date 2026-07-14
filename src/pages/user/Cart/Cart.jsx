@@ -8,7 +8,17 @@ import {
 import { useBooking } from "../../../context/BookingContext";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchCart, updateCart } from "../../../api/CartApi";
-
+import React, { useState } from "react";
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaMoneyBillWave,
+  FaLock,
+} from "react-icons/fa";
+import { ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { useBooking } from "../../../context/BookingContext";
+import { Link, useNavigate } from "react-router-dom";
+import { createBooking } from "./../../../api/BookingApi";
 // const deleteHandler = removeFormCart || removeFromCart;
 const Cart = () => {
   const { selectedCar, bookingData, setCart, cart, EditCart } = useBooking();
@@ -65,7 +75,33 @@ const Cart = () => {
   const finalTotal = rowFinalTotal.toLocaleString();
 
   if (isLoading) return <div className="pt-32 text-center">Loadig</div>;
+  const finalTotal = rowFinalTotal.toLocaleString();
+  const [successMessage, setSuccessMessage] = useState("");
 
+  const handleBooking = () => {
+    const newBooking = {
+      carId: selectedCar._id || selectedCar.id,
+      carName:
+        selectedCar.carName || `${selectedCar.brand} ${selectedCar.model}`,
+      startDate: bookingData.pickupDate,
+      endDate: bookingData.returnDate,
+      totalPrice: rowFinalTotal,
+    };
+
+    createBooking(newBooking)
+      .then(() => {
+        setSuccessMessage("Booking done successfully!");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+          navigate("/user-bookings");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Booking failed.");
+      });
+  };
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-6 pt-32">
       {selectedCar ? (
@@ -175,6 +211,19 @@ const Cart = () => {
                 CheckOut
               </button>
             </Link>
+
+            {successMessage && (
+              <div className="fixed top-6 right-6 bg-green text-white px-6 py-3 rounded-lg shadow-lg z-50">
+                {successMessage}
+              </div>
+            )}
+            <button
+              onClick={handleBooking}
+              className="w-full bg-[#22c55e] text-white py-3 rounded-xl hover:bg-[#4ade80] transition-all"
+            >
+              Book Now
+            </button>
+
             <p className="text-xs text-center text-gray-400 flex items-center justify-center gap-1">
               <FaLock /> 100% Secure Payment
             </p>

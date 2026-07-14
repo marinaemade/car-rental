@@ -103,13 +103,6 @@ const SidebarContent = ({ onClose }) => {
             <p className="text-xs text-green">System Administrator</p>
           </div>
         </div>
-        <button
-          onClick={() => navigate("/login")}
-          className="w-full flex items-center gap-2 py-2 px-3 rounded-xl text-gray hover:text-red-400 hover:bg-red-500/5 text-sm font-medium transition-colors"
-        >
-          <ArrowRightOnRectangleIcon className="h-5 w-5" />
-          Sign Out
-        </button>
       </div>
     </div>
   );

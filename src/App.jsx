@@ -11,6 +11,10 @@ import { Auth } from "./context/AuthContext";
 import { BookingProvider } from "./context/BookingContext";
 import User from "./pages/user/userPage/User";
 
+
+
+console.log("hello");
+
 const App = () => {
   return (
     <Auth>

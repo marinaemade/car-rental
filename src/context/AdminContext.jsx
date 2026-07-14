@@ -5,7 +5,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 const getHeaders = () => {
-  const token = localStorage.getItem("tc");
+  const token = localStorage.getItem("token");
   return {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -180,40 +180,39 @@ export const AdminProvider = ({ children }) => {
     };
   }
 
-  const addBooking = async (booking) => {
-    try {
-      const res = await fetch(`${BASE_URL}/bookings`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(booking),
-      });
-      if (!res.ok) throw new Error("Failed to add booking");
-      const savedBooking = await res.json();
-      setBookings((prev) => [savedBooking, ...prev]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const addBooking = async (booking) => {
+  //   try {
+  //     const res = await fetch(`${BASE_URL}/bookings`, {
+  //       method: "POST",
+  //       headers: getHeaders(),
+  //       body: JSON.stringify(booking),
+  //     });
+  //     if (!res.ok) throw new Error("Failed to add booking");
+  //     const savedBooking = await res.json();
+  //     setBookings((prev) => [savedBooking, ...prev]);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const updateBooking = async (id, updates) => {
-    try {
-      const res = await fetch(`${BASE_URL}/bookings/${id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(updates),
-      });
-      if (!res.ok) throw new Error("Failed to update booking");
-      const updatedBooking = await res.json();
-      setBookings((prev) => prev.map((b) => (b.id == id ? updatedBooking : b)));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const updateBooking = async (id, updates) => {
+  //   try {
+  //     const res = await fetch(`${BASE_URL}/bookings/${id}`, {
+  //       method: "PUT",
+  //       headers: getHeaders(),
+  //       body: JSON.stringify(updates),
+  //     });
+  //     if (!res.ok) throw new Error("Failed to update booking");
+  //     const updatedBooking = await res.json();
+  //     setBookings((prev) => prev.map((b) => (b.id == id ? updatedBooking : b)));
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const deleteBooking = (id) => {
-    // Booking deletion is unsupported on the server side; perform local cleanup
-    setBookings((prev) => prev.filter((b) => b.id != id));
-  };
+  // const deleteBooking = (id) => {
+  //   setBookings((prev) => prev.filter((b) => b.id != id));
+  // };
 
   const updateBookingStatus = async (id, status) => {
     try {
@@ -305,48 +304,48 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
-  const addClient = async (client) => {
-    try {
-      const res = await fetch(`${BASE_URL}/users`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(client),
-      });
-      if (!res.ok) throw new Error("Failed to add client");
-      const savedClient = await res.json();
-      setClients((prev) => [savedClient, ...prev]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const addClient = async (client) => {
+  //   try {
+  //     const res = await fetch(`${BASE_URL}/users`, {
+  //       method: "POST",
+  //       headers: getHeaders(),
+  //       body: JSON.stringify(client),
+  //     });
+  //     if (!res.ok) throw new Error("Failed to add client");
+  //     const savedClient = await res.json();
+  //     setClients((prev) => [savedClient, ...prev]);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const updateClient = async (id, updates) => {
-    try {
-      const res = await fetch(`${BASE_URL}/users/${id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(updates),
-      });
-      if (!res.ok) throw new Error("Failed to update client");
-      const updatedClient = await res.json();
-      setClients((prev) => prev.map((c) => (c.id == id ? updatedClient : c)));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const updateClient = async (id, updates) => {
+  //   try {
+  //     const res = await fetch(`${BASE_URL}/users/${id}`, {
+  //       method: "PUT",
+  //       headers: getHeaders(),
+  //       body: JSON.stringify(updates),
+  //     });
+  //     if (!res.ok) throw new Error("Failed to update client");
+  //     const updatedClient = await res.json();
+  //     setClients((prev) => prev.map((c) => (c.id == id ? updatedClient : c)));
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const deleteClient = async (id) => {
-    try {
-      const res = await fetch(`${BASE_URL}/users/${id}`, {
-        method: "DELETE",
-        headers: getHeaders(),
-      });
-      if (!res.ok) throw new Error("Failed to delete client");
-      setClients((prev) => prev.filter((c) => c.id != id));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const deleteClient = async (id) => {
+  //   try {
+  //     const res = await fetch(`${BASE_URL}/users/${id}`, {
+  //       method: "DELETE",
+  //       headers: getHeaders(),
+  //     });
+  //     if (!res.ok) throw new Error("Failed to delete client");
+  //     setClients((prev) => prev.filter((c) => c.id != id));
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const addDriver = async (driver) => {
     try {
@@ -452,16 +451,10 @@ export const AdminProvider = ({ children }) => {
         expenses,
         stats: derived,
         loading,
-        addBooking,
-        updateBooking,
-        deleteBooking,
         updateBookingStatus,
         addUnit,
         updateUnit,
         deleteUnit,
-        addClient,
-        updateClient,
-        deleteClient,
         addDriver,
         updateDriver,
         deleteDriver,
